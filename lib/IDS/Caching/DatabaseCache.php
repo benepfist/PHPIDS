@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -143,7 +144,7 @@ class DatabaseCache implements CacheInterface
      * @throws PDOException if a db error occurred
      * @return object       $this
      */
-    public function setCache(array $data)
+    public function setCache(array $data): self
     {
         $handle = $this->handle;
 
@@ -176,7 +177,7 @@ class DatabaseCache implements CacheInterface
      * @throws PDOException if a db error occurred
      * @return mixed        cache data or false
      */
-    public function getCache()
+    public function getCache(): mixed
     {
         try {
             $handle = $this->handle;

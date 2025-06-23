@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -51,32 +52,38 @@ namespace IDS;
 class Filter
 {
     /**
+     * Filter ID
+     *
+     * @var int
+     */
+    protected int $id;
+    /**
      * Filter rule
      *
      * @var string
      */
-    protected $rule;
+    protected string $rule;
 
     /**
      * List of tags of the filter
      *
      * @var string[]|array
      */
-    protected $tags = array();
+    protected array $tags = [];
 
     /**
      * Filter impact level
      *
      * @var integer
      */
-    protected $impact = 0;
+    protected int $impact = 0;
 
     /**
      * Filter description
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * Constructor
@@ -89,7 +96,7 @@ class Filter
      *
      * @return \IDS\Filter
      */
-    public function __construct($id, $rule, $description, array $tags, $impact)
+    public function __construct(int $id, string $rule, string $description, array $tags, int $impact)
     {
         $this->id          = $id;
         $this->rule        = $rule;
@@ -109,7 +116,7 @@ class Filter
      * @throws \InvalidArgumentException if argument is no string
      * @return boolean
      */
-    public function match($input)
+    public function match(string $input): bool
     {
         if (!is_string($input)) {
             throw new \InvalidArgumentException(
@@ -125,7 +132,7 @@ class Filter
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -138,7 +145,7 @@ class Filter
      *
      * @return string[]|array
      */
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
@@ -148,7 +155,7 @@ class Filter
      *
      * @return string
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->rule;
     }
@@ -158,7 +165,7 @@ class Filter
      *
      * @return integer
      */
-    public function getImpact()
+    public function getImpact(): int
     {
         return $this->impact;
     }
@@ -168,7 +175,7 @@ class Filter
      *
      * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

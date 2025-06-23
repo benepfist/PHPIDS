@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -56,14 +57,14 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @var string
      */
-    protected $name = null;
+    protected mixed $name = null;
 
     /**
      * Value of the event
      *
      * @var mixed
      */
-    protected $value = null;
+    protected mixed $value = null;
 
     /**
      * List of filter objects
@@ -72,7 +73,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @var Filter[]|array
      */
-    protected $filters = array();
+    protected array $filters = [];
 
     /**
      * Calculated impact
@@ -81,14 +82,14 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @var integer
      */
-    protected $impact = 0;
+    protected int $impact = 0;
 
     /**
      * Affecte tags
      *
      * @var string[]|array
      */
-    protected $tags = array();
+    protected array $tags = [];
 
     /**
      * Constructor
@@ -102,7 +103,7 @@ class Event implements \Countable, \IteratorAggregate
      * @throws \InvalidArgumentException
      * @return \IDS\Event
      */
-    public function __construct($name, $value, array $filters)
+    public function __construct(mixed $name, mixed $value, array $filters)
     {
         if (!is_scalar($name)) {
             throw new \InvalidArgumentException(
@@ -138,7 +139,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return string
      */
-    public function getName()
+    public function getName(): mixed
     {
         return $this->name;
     }
@@ -148,7 +149,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return mixed
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -158,7 +159,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return integer
      */
-    public function getImpact()
+    public function getImpact(): int
     {
         if (!$this->impact) {
             $this->impact = 0;
@@ -175,7 +176,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return string[]|array
      */
-    public function getTags()
+    public function getTags(): array
     {
         foreach ($this->getFilters() as $filter) {
             $this->tags = array_merge($this->tags, $filter->getTags());
@@ -189,7 +190,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return Filter[]|array
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->filters;
     }
@@ -202,7 +203,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return integer
      */
-    public function count()
+    public function count(): int
     {
         return count($this->getFilters());
     }
@@ -214,7 +215,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return \Iterator the filter collection
      */
-    public function getIterator()
+    public function getIterator(): \Iterator
     {
         return new \ArrayIterator($this->getFilters());
     }
