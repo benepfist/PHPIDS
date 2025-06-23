@@ -1,4 +1,5 @@
 /.cache
+/.phpunit.cache
 /tmp
 /nbproject/
 /lib/IDS/tmp/
