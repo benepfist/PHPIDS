@@ -30,7 +30,7 @@ class InitTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->init = Init::init(IDS_CONFIG);
+        $this->init = Init::init(\IDS_CONFIG);
     }
 
     public function testInit()

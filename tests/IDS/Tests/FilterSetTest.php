@@ -43,9 +43,9 @@ class FilterSetTest extends TestCase
 
     private function getFilterSet($type)
     {
-        $init = Init::init(IDS_CONFIG);
+        $init = Init::init(\IDS_CONFIG);
         $init->config['General']['filter_type'] = strtolower($type);
-        $init->config['General']['filter_path'] = constant('IDS_FILTER_SET_' . strtoupper($type));
+        $init->config['General']['filter_path'] = constant('\IDS_FILTER_SET_' . strtoupper($type));
         $init->config['Caching']['caching'] = 'none';
         $storage = new Storage($init);
 

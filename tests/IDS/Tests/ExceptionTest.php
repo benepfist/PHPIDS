@@ -54,7 +54,7 @@ class ExceptionTest extends TestCase
             )
         ));
 
-        $this->init = Init::init(IDS_CONFIG);
+        $this->init = Init::init(\IDS_CONFIG);
     }
 
     public function testEventConstructorExceptions1()

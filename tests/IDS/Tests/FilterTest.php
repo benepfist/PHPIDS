@@ -32,7 +32,7 @@ class FilterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->init = Init::init(IDS_CONFIG);
+        $this->init = Init::init(\IDS_CONFIG);
     }
 
     public function testObjectConstruction()
@@ -79,8 +79,8 @@ class FilterTest extends TestCase
 
     public function testFilterSetFilterSet()
     {
-        $this->init->config['General']['filter_type'] = IDS_FILTER_TYPE;
-        $this->init->config['General']['filter_path'] = IDS_FILTER_SET;
+        $this->init->config['General']['filter_type'] = \IDS_FILTER_TYPE;
+        $this->init->config['General']['filter_path'] = \IDS_FILTER_SET;
         $storage = new Storage($this->init);
         $filter = array(new Filter(1, 'test', 'test2', array(), 1));
         $this->assertTrue($storage->setFilterSet($filter) instanceof Storage);

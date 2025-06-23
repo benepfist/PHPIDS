@@ -33,7 +33,7 @@ class CachingTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->init = Init::init(IDS_CONFIG);
+        $this->init = Init::init(\IDS_CONFIG);
     }
 
     public function testCachingNone()
@@ -53,7 +53,7 @@ class CachingTest extends TestCase
     {
         $this->init->config['Caching']['caching'] = 'file';
         $this->init->config['Caching']['expiration_time'] = 0;
-        $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
+        $this->init->config['Caching']['path'] = \IDS_FILTER_CACHE_FILE;
         $cache = CacheFactory::factory($this->init, 'storage');
         $cache = $cache->setCache(array(1,2,3,4));
         $this->assertTrue($cache instanceof FileCache);
@@ -63,7 +63,7 @@ class CachingTest extends TestCase
     {
         $this->init->config['Caching']['caching'] = 'file';
         $this->init->config['Caching']['expiration_time'] = 0;
-        $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
+        $this->init->config['Caching']['path'] = \IDS_FILTER_CACHE_FILE;
         $cache = CacheFactory::factory($this->init, 'storage');
         $cache = $cache->setCache(array(1,2,3,4));
         $this->assertEquals($cache->getCache(), array(1,2,3,4));
@@ -105,6 +105,6 @@ class CachingTest extends TestCase
 
     protected function tearDown(): void
     {
-        @unlink(IDS_FILTER_CACHE_FILE);
+        @unlink(\IDS_FILTER_CACHE_FILE);
     }
 }

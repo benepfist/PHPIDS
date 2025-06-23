@@ -35,11 +35,11 @@ class MonitorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->init = Init::init(IDS_CONFIG);
-        $this->init->config['General']['filter_type'] = IDS_FILTER_TYPE;
-        $this->init->config['General']['filter_path'] = IDS_FILTER_SET;
-        $this->init->config['General']['tmp_path'] = IDS_TEMP_DIR;
-        $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
+        $this->init = Init::init(\IDS_CONFIG);
+        $this->init->config['General']['filter_type'] = \IDS_FILTER_TYPE;
+        $this->init->config['General']['filter_path'] = \IDS_FILTER_SET;
+        $this->init->config['General']['tmp_path'] = \IDS_TEMP_DIR;
+        $this->init->config['Caching']['path'] = \IDS_FILTER_CACHE_FILE;
     }
 
     public function testGetHTML()
