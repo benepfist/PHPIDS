@@ -3,7 +3,7 @@
 /**
  * PHPIDS
  *
- * Requirements: PHP5, SimpleXML
+ * Requirements: PHP 8.4, SimpleXML
  *
  * Copyright (c) 2008 PHPIDS group (https://phpids.org)
  *
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with PHPIDS. If not, see <http://www.gnu.org/licenses/>.
  *
- * PHP version 5.1.6+
+ * PHP version 8.4+
  *
  * @category Security
  * @package  PHPIDS
@@ -499,7 +499,7 @@ class Converter
     {
         if (preg_match('/\+A\w+-?/m', $value)) {
             if (function_exists('mb_convert_encoding')) {
-                if (version_compare(PHP_VERSION, '5.2.8', '<')) {
+                if (version_compare(PHP_VERSION, '8.4.0', '<')) {
                     $tmp_chars = str_split($value);
                     $value = '';
                     foreach ($tmp_chars as $char) {

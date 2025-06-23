@@ -1,7 +1,7 @@
 <?php
 /**
  * PHPIDS
- * Requirements: PHP5, SimpleXML
+ * Requirements: PHP 8.4, SimpleXML
  *
  * Copyright (c) 2010 PHPIDS group (https://phpids.org)
  *
