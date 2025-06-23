@@ -17,17 +17,18 @@
  * @package    PHPIDS tests
  */
 namespace IDS\Tests;
+use PHPUnit\Framework\TestCase;
 
 use IDS\Init;
 
-class InitTest extends \PHPUnit_Framework_TestCase
+class InitTest extends TestCase
 {
     /**
      * @var \IDS\Init
      */
     private $init = null;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->init = Init::init(IDS_CONFIG);
     }
