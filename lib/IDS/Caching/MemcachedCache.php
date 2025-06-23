@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -124,7 +125,7 @@ class MemcachedCache implements CacheInterface
      *
      * @return object $this
      */
-    public function setCache(array $data)
+    public function setCache(array $data): self
     {
         if (!$this->isCached) {
             $this->memcache->set(
@@ -146,7 +147,7 @@ class MemcachedCache implements CacheInterface
      *
      * @return mixed cache data or false
      */
-    public function getCache()
+    public function getCache(): mixed
     {
         $data = $this->memcache->get(
             $this->config['key_prefix'] .

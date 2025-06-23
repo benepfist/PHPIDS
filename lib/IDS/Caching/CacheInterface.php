@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -53,12 +54,12 @@ interface CacheInterface
      *
      * @return void
      */
-    public function setCache(array $data);
+    public function setCache(array $data): self;
 
     /**
      * Interface method
      *
      * @return void
      */
-    public function getCache();
+    public function getCache(): mixed;
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -127,7 +128,7 @@ class FileCache implements CacheInterface
      * @throws Exception if cache file couldn't be created
      * @return object    $this
      */
-    public function setCache(array $data)
+    public function setCache(array $data): self
     {
         if (!is_writable(preg_replace('/[\/][^\/]+\.[^\/]++$/', null, $this->path))) {
             throw new \Exception(
@@ -164,7 +165,7 @@ class FileCache implements CacheInterface
      *
      * @return mixed cache data or false
      */
-    public function getCache()
+    public function getCache(): mixed
     {
         // make sure filters are parsed again if cache expired
         if (!$this->isValidFile($this->path)) {

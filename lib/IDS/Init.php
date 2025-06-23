@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -54,7 +55,7 @@ class Init
      *
      * @var array
      */
-    public $config = array();
+    public array $config = [];
 
     /**
      * Instance of this class depending on the supplied config file
@@ -62,7 +63,7 @@ class Init
      * @var Init[]|array
      * @static
      */
-    private static $instances = array();
+    private static array $instances = [];
 
     /**
      * Constructor
@@ -73,7 +74,7 @@ class Init
      *
      * @return \IDS\Init $this
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         $this->config = $config;
     }
@@ -87,7 +88,7 @@ class Init
      * @throws \InvalidArgumentException
      * @return self
      */
-    public static function init($configPath = null)
+    public static function init(?string $configPath = null): self
     {
         if (!$configPath) {
             return new self();
@@ -109,7 +110,7 @@ class Init
      *
      * @return string|null  the base path or null
      */
-    public function getBasePath()
+    public function getBasePath(): ?string
     {
         return (!empty($this->config['General']['base_path'])
                 && !empty($this->config['General']['use_base_path']))
@@ -124,7 +125,7 @@ class Init
      *
      * @return void
      */
-    public function setConfig(array $config, $overwrite = false)
+    public function setConfig(array $config, bool $overwrite = false): void
     {
         if ($overwrite) {
             $this->config = $this->mergeConfig($this->config, $config);
@@ -144,7 +145,7 @@ class Init
      * @param  array $successor The hash which values count more when in doubt
      * @return array Merged hash
      */
-    protected function mergeConfig($current, $successor)
+    protected function mergeConfig(array $current, array $successor): array
     {
         if (is_array($current) and is_array($successor)) {
             foreach ($successor as $key => $value) {
@@ -167,7 +168,7 @@ class Init
      *
      * @return array the config array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
     }

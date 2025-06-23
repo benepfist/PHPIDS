@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -109,7 +110,7 @@ class SessionCache implements CacheInterface
      *
      * @return object $this
      */
-    public function setCache(array $data)
+    public function setCache(array $data): self
     {
 
         $_SESSION['PHPIDS'][$this->type] = $data;
@@ -124,7 +125,7 @@ class SessionCache implements CacheInterface
      *
      * @return mixed cache data or false
      */
-    public function getCache()
+    public function getCache(): mixed
     {
 
         if ($this->type && $_SESSION['PHPIDS'][$this->type]) {

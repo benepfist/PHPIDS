@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPIDS
  *
@@ -56,7 +57,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @var Event[]|array
      */
-    protected $events = array();
+    protected array $events = [];
 
     /**
      * List of affected tags
@@ -66,7 +67,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @var string[]|array
      */
-    protected $tags = array();
+    protected array $tags = [];
 
     /**
      * Impact level
@@ -76,7 +77,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @var integer
      */
-    protected $impact = 0;
+    protected int $impact = 0;
 
     /**
      * Centrifuge data
@@ -86,7 +87,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @var array
      */
-    protected $centrifuge = array();
+    protected array $centrifuge = [];
 
     /**
      * Constructor
@@ -95,7 +96,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return Report
      */
-    public function __construct(array $events = null)
+    public function __construct(?array $events = null)
     {
         foreach ((array) $events as $event) {
             $this->addEvent($event);
@@ -109,7 +110,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return self $this
      */
-    public function addEvent(Event $event)
+    public function addEvent(Event $event): self
     {
         $this->clear();
         $this->events[$event->getName()] = $event;
@@ -128,7 +129,7 @@ class Report implements \Countable, \IteratorAggregate
      * @throws \InvalidArgumentException if argument is invalid
      * @return Event|null                    IDS_Event object or false if the event does not exist
      */
-    public function getEvent($name)
+    public function getEvent(mixed $name): ?Event
     {
         if (!is_scalar($name)) {
             throw new \InvalidArgumentException('Invalid argument type given');
@@ -142,10 +143,10 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return string[]|array
      */
-    public function getTags()
+    public function getTags(): array
     {
         if (!$this->tags) {
-            $this->tags = array();
+            $this->tags = [];
 
             foreach ($this->events as $event) {
                 $this->tags = array_merge($this->tags, $event->getTags());
@@ -165,7 +166,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return integer
      */
-    public function getImpact()
+    public function getImpact(): int
     {
         if (!$this->impact) {
             $this->impact = 0;
@@ -185,7 +186,7 @@ class Report implements \Countable, \IteratorAggregate
      * @throws \InvalidArgumentException if argument is illegal
      * @return boolean
      */
-    public function hasEvent($name)
+    public function hasEvent(mixed $name): bool
     {
         if (!is_scalar($name)) {
             throw new \InvalidArgumentException('Invalid argument given');
@@ -199,7 +200,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return integer
      */
-    public function count()
+    public function count(): int
     {
         return count($this->events);
     }
@@ -213,7 +214,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return \Iterator the event collection
      */
-    public function getIterator()
+    public function getIterator(): \Iterator
     {
         return new \ArrayIterator($this->events);
     }
@@ -223,7 +224,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return boolean
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->events);
     }
@@ -233,10 +234,10 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return void
      */
-    protected function clear()
+    protected function clear(): void
     {
         $this->impact = 0;
-        $this->tags   = array();
+        $this->tags   = [];
     }
 
     /**
@@ -245,7 +246,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return array
      */
-    public function getCentrifuge()
+    public function getCentrifuge(): array
     {
         return $this->centrifuge;
     }
@@ -258,7 +259,7 @@ class Report implements \Countable, \IteratorAggregate
      * @throws \InvalidArgumentException if argument is illegal
      * @return void
      */
-    public function setCentrifuge(array $centrifuge = array())
+    public function setCentrifuge(array $centrifuge = []): void
     {
         if (!$centrifuge) {
             throw new \InvalidArgumentException('Empty centrifuge given');
@@ -271,7 +272,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $output = '';
         if (!$this->isEmpty()) {
