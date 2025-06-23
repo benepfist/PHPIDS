@@ -3,7 +3,7 @@ declare(strict_types=1);
 /**
  * PHPIDS
  *
- * Requirements: PHP5, SimpleXML
+ * Requirements: PHP 8.4, SimpleXML
  *
  * Copyright (c) 2008 PHPIDS group (https://phpids.org)
  *
@@ -20,7 +20,7 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Lesser General Public License
  * along with PHPIDS. If not, see <http://www.gnu.org/licenses/>.
  *
- * PHP version 5.1.6+
+ * PHP version 8.4+
  *
  * @category Security
  * @package  PHPIDS
@@ -81,7 +81,7 @@ class Init
 
     /**
      * Returns an instance of this class. Also a PHP version check
-     * is being performed to avoid compatibility problems with PHP < 5.1.6
+     * is being performed to avoid compatibility problems with PHP < 8.4
      *
      * @param string|null $configPath the path to the config file
      *
