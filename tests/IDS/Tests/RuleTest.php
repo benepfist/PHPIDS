@@ -29,7 +29,7 @@ class RuleTest extends TestCase
      */
     protected $init;
 
-    public function getPayloads()
+    public static function getPayloads()
     {
         return array(
             array(20, "if  ("),
@@ -51,11 +51,12 @@ class RuleTest extends TestCase
     protected function setUp(): void
     {
         $this->init = Init::init(\IDS_CONFIG);
+        $this->init->config['Caching']['caching'] = 'none';
         $this->init->config['General']['filter_type'] = \IDS_FILTER_TYPE;
         $this->init->config['General']['filter_path'] = \IDS_FILTER_SET;
     }
 
-    /** @dataProvider getPayloads */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPayloads')]
     public function testSingleRules($ruleId, $payload)
     {
         $monitor = new Monitor($this->init);

@@ -63,7 +63,7 @@ class CacheFactory
         $object  = false;
         $wrapper = preg_replace(
             '/\W+/m',
-            null,
+            '',
             ucfirst($init->config['Caching']['caching'])
         );
         $class   = '\\IDS\\Caching\\' . $wrapper . 'Cache';

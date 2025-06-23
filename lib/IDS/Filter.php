@@ -116,7 +116,7 @@ class Filter
      * @throws \InvalidArgumentException if argument is no string
      * @return boolean
      */
-    public function match(string $input): bool
+    public function match(mixed $input): bool
     {
         if (!is_string($input)) {
             throw new \InvalidArgumentException(
