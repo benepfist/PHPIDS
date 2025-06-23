@@ -17,10 +17,11 @@
  * @package	PHPIDS tests
  */
 namespace IDS\Tests;
+use PHPUnit\Framework\TestCase;
 
 use IDS\Version;
 
-class VersionTest extends \PHPUnit_Framework_TestCase
+class VersionTest extends TestCase
 {
     public function testVersionConstantIsDefined()
     {
