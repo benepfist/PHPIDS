@@ -1300,7 +1300,7 @@ class MonitorTest extends TestCase
         $this->assertEquals(109, $result->getImpact());
     }
 
-    public function testLDAPInjectionList()
+        $exploits['html_8'] = '<img src=1 onerror=alert(1) alt=1>';
     {
         $exploits = array();
         $exploits[] = "*(|(objectclass=*))";
