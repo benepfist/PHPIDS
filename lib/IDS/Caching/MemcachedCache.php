@@ -66,9 +66,9 @@ class MemcachedCache implements CacheInterface
     /**
      * Memcache object
      *
-     * @var \Memcache|null
+     * @var \Memcache
      */
-    private $memcache = null;
+    private $memcache;
 
     /**
      * Holds an instance of this class

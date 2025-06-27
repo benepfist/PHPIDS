@@ -120,7 +120,8 @@ class FileCache implements CacheInterface
      */
     public function setCache(array $data)
     {
-        if (!is_writable(preg_replace('/[\/][^\/]+\.[^\/]++$/', '', $this->path))) {
+        $directory = dirname($this->path);
+        if (!is_writable($directory)) {
             throw new \Exception(
                 'Temp directory ' .
                 htmlspecialchars($this->path, ENT_QUOTES, 'UTF-8') .

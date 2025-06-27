@@ -267,7 +267,7 @@ class Storage
                 /*
                  * If caching is enabled, the fetched data will be cached
                 */
-                if ($this->cacheSettings) {
+                if ($this->cacheSettings && $this->cache !== null) {
                     $this->cache->setCache($data);
                 }
                 
@@ -364,7 +364,7 @@ class Storage
                 /*
                  * If caching is enabled, the fetched data will be cached
                  */
-                if ($this->cacheSettings) {
+                if ($this->cacheSettings && $this->cache !== null) {
                     $this->cache->setCache($data);
                 }
                 
