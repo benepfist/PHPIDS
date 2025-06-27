@@ -72,11 +72,12 @@ class CacheFactory
             include_once $path;
 
             if (class_exists($class)) {
-                $object = call_user_func(
-                    array('' . $class, 'getInstance'),
-                    $type,
-                    $init
-                );
+                $method = new \ReflectionMethod($class, 'getInstance');
+                $args = $method->getNumberOfParameters() === 2
+                    ? array($type, $init)
+                    : array($init);
+
+                $object = $method->invokeArgs(null, $args);
             }
         }
 

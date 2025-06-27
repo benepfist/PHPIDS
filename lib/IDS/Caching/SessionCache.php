@@ -66,7 +66,7 @@ class SessionCache implements CacheInterface
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance = null;
 

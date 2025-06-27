@@ -1,0 +1,6 @@
+parameters:
+    level: 4
+    paths:
+        - lib
+    excludePaths:
+        - lib/IDS/Config/Config.ini.php

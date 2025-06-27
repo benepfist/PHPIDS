@@ -48,12 +48,6 @@ namespace IDS\Caching;
  */
 class MemcachedCache implements CacheInterface
 {
-    /**
-     * Caching type
-     *
-     * @var string
-     */
-    private $type = null;
 
     /**
      * Cache configuration
@@ -79,22 +73,20 @@ class MemcachedCache implements CacheInterface
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance = null;
 
     /**
      * Constructor
      *
-     * @param string   $type caching type
      * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
-    public function __construct($type, $init)
+    public function __construct($init)
     {
-
-        $this->type   = $type;
+        
         $this->config = $init->config['Caching'];
 
         $this->connect();
@@ -103,15 +95,14 @@ class MemcachedCache implements CacheInterface
     /**
      * Returns an instance of this class
      *
-     * @param string   $type caching type
      * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
-    public static function getInstance($type, $init)
+    public static function getInstance($init)
     {
         if (!self::$cachingInstance) {
-            self::$cachingInstance = new MemcachedCache($type, $init);
+            self::$cachingInstance = new MemcachedCache($init);
         }
 
         return self::$cachingInstance;
