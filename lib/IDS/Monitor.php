@@ -564,7 +564,7 @@ class Monitor
     /**
      * Returns storage container
      *
-     * @return array
+     * @return Storage
      */
     public function getStorage()
     {

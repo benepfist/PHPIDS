@@ -59,7 +59,7 @@ class Init
     /**
      * Instance of this class depending on the supplied config file
      *
-     * @var array<string, static>
+     * @var array<string, self>
      * @static
      */
     private static $instances = array();
@@ -85,7 +85,7 @@ class Init
      * @param string|null $configPath the path to the config file
      *
      * @throws \InvalidArgumentException
-     * @return static
+     * @return self
      */
     public static function init($configPath = null)
     {

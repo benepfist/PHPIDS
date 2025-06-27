@@ -106,9 +106,11 @@ class Storage
 
             switch ($type) {
                 case 'xml':
-                    return $this->getFilterFromXML();
+                    $this->getFilterFromXML();
+                    break;
                 case 'json':
-                    return $this->getFilterFromJson();
+                    $this->getFilterFromJson();
+                    break;
                 default:
                     throw new \InvalidArgumentException('Unsupported filter type.');
             }
