@@ -85,7 +85,7 @@ class Storage
      *
      * Loads filters based on provided IDS_Init settings.
      *
-     * @param object $init IDS_Init instance
+     * @param \IDS\Init $init IDS_Init instance
      *
      * @throws \InvalidArgumentException if unsupported filter type is given
      * @return void
@@ -144,7 +144,7 @@ class Storage
     /**
      * Adds a filter
      *
-     * @param object $filter IDS_Filter instance
+     * @param \IDS\Filter $filter IDS_Filter instance
      *
      * @return object $this
      */

@@ -132,6 +132,13 @@ class Monitor
     private $tmpJsonString = '';
 
     /**
+     * Centrifuge data container
+     *
+     * @var array
+     */
+    public $centrifuge = array();
+
+    /**
      * Constructor
      *
      * @throws \InvalidArgumentException When PHP version is less than what the library supports
@@ -294,7 +301,7 @@ class Monitor
                 throw new \Exception($this->HTMLPurifierCache . ' must be writeable');
             }
 
-            /** @var $config \HTMLPurifier_Config */
+            /** @var \HTMLPurifier_Config $config */
             $config = \HTMLPurifier_Config::createDefault();
             $config->set('Attr.EnableID', true);
             $config->set('Cache.SerializerPath', $this->HTMLPurifierCache);

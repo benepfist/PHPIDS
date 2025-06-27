@@ -86,8 +86,8 @@ class MemcachedCache implements CacheInterface
     /**
      * Constructor
      *
-     * @param string $type caching type
-     * @param array  $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
@@ -103,8 +103,8 @@ class MemcachedCache implements CacheInterface
     /**
      * Returns an instance of this class
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
@@ -160,7 +160,7 @@ class MemcachedCache implements CacheInterface
     /**
      * Connect to the memcached server
      *
-     * @throws Exception if connection parameters are insufficient
+     * @throws \Exception if connection parameters are insufficient
      * @return void
      */
     private function connect()
