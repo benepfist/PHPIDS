@@ -238,7 +238,7 @@ class DatabaseCache implements CacheInterface
      * @param object $handle the database handle
      * @param array  $data   the caching data
      *
-     * @return object       PDO
+     * @return void
      * @throws PDOException if a db error occurred
      */
     private function write($handle, $data)

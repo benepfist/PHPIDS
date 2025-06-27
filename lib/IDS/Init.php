@@ -59,7 +59,7 @@ class Init
     /**
      * Instance of this class depending on the supplied config file
      *
-     * @var Init[]|array
+     * @var array<string, static>
      * @static
      */
     private static $instances = array();
@@ -85,7 +85,7 @@ class Init
      * @param string|null $configPath the path to the config file
      *
      * @throws \InvalidArgumentException
-     * @return self
+     * @return static
      */
     public static function init($configPath = null)
     {
@@ -96,7 +96,7 @@ class Init
             if (!file_exists($configPath) || !is_readable($configPath)) {
                 throw new \InvalidArgumentException("Invalid config path '$configPath'");
             }
-            self::$instances[$configPath] = new static(parse_ini_file($configPath, true));
+            self::$instances[$configPath] = new self(parse_ini_file($configPath, true));
         }
 
         return self::$instances[$configPath];
