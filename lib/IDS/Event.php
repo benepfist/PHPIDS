@@ -48,6 +48,8 @@ namespace IDS;
  * @copyright 2007-2009 The PHPIDS Group
  * @license   http://www.gnu.org/licenses/lgpl.html LGPL
  * @link      http://php-ids.org/
+ *
+ * @implements \IteratorAggregate<int, Filter>
  */
 class Event implements \Countable, \IteratorAggregate
 {

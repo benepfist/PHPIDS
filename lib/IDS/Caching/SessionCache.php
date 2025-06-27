@@ -59,7 +59,7 @@ class SessionCache implements CacheInterface
     /**
      * Cache configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $config = null;
 
@@ -105,7 +105,7 @@ class SessionCache implements CacheInterface
     /**
      * Writes cache data into the session
      *
-     * @param array $data the caching data
+     * @param array<int|string, mixed> $data the caching data
      *
      * @return object $this
      */

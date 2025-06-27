@@ -52,7 +52,7 @@ class Init
     /**
      * Holds config settings
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public $config = array();
 
@@ -69,7 +69,7 @@ class Init
      *
      * Includes needed classes and parses the configuration file
      *
-     * @param array $config
+     * @param array<string, mixed> $config
      *
      * @return \IDS\Init $this
      */
@@ -119,7 +119,7 @@ class Init
     /**
      * Merges new settings into the exsiting ones or overwrites them
      *
-     * @param array   $config    the config array
+     * @param array<string, mixed>   $config    the config array
      * @param boolean $overwrite config overwrite flag
      *
      * @return void
@@ -140,9 +140,9 @@ class Init
      * an array in both, the values will be appended. If it is a scalar in both,
      * the value will be replaced.
      *
-     * @param  array $current   The legacy hash
-     * @param  array $successor The hash which values count more when in doubt
-     * @return array Merged hash
+     * @param  array<string, mixed> $current   The legacy hash
+     * @param  array<string, mixed> $successor The hash which values count more when in doubt
+     * @return array<string, mixed> Merged hash
      */
     protected function mergeConfig(array $current, array $successor)
     {
@@ -163,7 +163,7 @@ class Init
     /**
      * Returns the config array
      *
-     * @return array the config array
+     * @return array<string, mixed> the config array
      */
     public function getConfig()
     {

@@ -56,7 +56,7 @@ class Monitor
      *
      * Accepted values are xss, csrf, sqli, dt, id, lfi, rfe, spam, dos
      *
-     * @var array
+     * @var string[]|null
      */
     private $tags = null;
 
@@ -85,7 +85,7 @@ class Monitor
      * Using this array it is possible to define variables that must not be
      * scanned. Per default, utmz google analytics parameters are permitted.
      *
-     * @var array
+     * @var string[]
      */
     private $exceptions = array();
 
@@ -96,7 +96,7 @@ class Monitor
      * contain html and have to be prepared before hitting the rules to
      * avoid too many false alerts
      *
-     * @var array
+     * @var string[]
      */
     private $html = array();
 
@@ -106,7 +106,7 @@ class Monitor
      * Using this array it is possible to define variables that contain
      * JSON data - and should be treated as such
      *
-     * @var array
+     * @var string[]
      */
     private $json = array();
 
@@ -134,7 +134,7 @@ class Monitor
     /**
      * Centrifuge data container
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public $centrifuge = array();
 
@@ -144,7 +144,7 @@ class Monitor
      * @throws \InvalidArgumentException When PHP version is less than what the library supports
      * @throws \Exception
      * @param  Init       $init instance of IDS_Init
-     * @param  array|null $tags list of tags to which filters should be applied
+     * @param  string[]|null $tags list of tags to which filters should be applied
      * @return Monitor
      */
     public function __construct(Init $init, ?array $tags = null)
@@ -170,7 +170,7 @@ class Monitor
     /**
      * Starts the scan mechanism
      *
-     * @param  array $request
+     * @param  array<string, mixed> $request
      * @return Report
      */
     public function run(array $request)
@@ -187,7 +187,7 @@ class Monitor
      * order to check for malicious appearing fragments
      *
      * @param string       $key   the former array key
-     * @param array|string $value the former array value
+     * @param array<string, mixed>|string $value the former array value
      * @param Report       $report
      * @return Report
      */
@@ -289,7 +289,7 @@ class Monitor
      * @since  0.5
      * @throws \Exception
      *
-     * @return array tuple [key,value]
+     * @return array{0:mixed,1:mixed} tuple [key,value]
      */
     private function purifyValues($key, $value)
     {
@@ -420,9 +420,9 @@ class Monitor
      * @param string $value
      * @since  0.5.3
      *
-     * @return array tuple [key,value]
-     */
-    private function jsonDecodeValues($key, $value)
+     * @return array{0:mixed,1:mixed} tuple [key,value]
+    */
+   private function jsonDecodeValues($key, $value)
     {
         $decodedKey   = json_decode($key);
         $decodedValue = json_decode($value);
@@ -478,9 +478,9 @@ class Monitor
     /**
      * Returns exception array
      *
-     * @return array
-     */
-    public function getExceptions()
+     * @return string[]
+    */
+   public function getExceptions()
     {
         return $this->exceptions;
     }
@@ -516,9 +516,9 @@ class Monitor
      *
      * @since 0.5
      *
-     * @return array the fields that contain allowed html
-     */
-    public function getHtml()
+     * @return string[] the fields that contain allowed html
+    */
+   public function getHtml()
     {
         return $this->html;
     }
@@ -554,9 +554,9 @@ class Monitor
      *
      * @since 0.5.3
      *
-     * @return array the fields that contain json
-     */
-    public function getJson()
+     * @return string[] the fields that contain json
+    */
+   public function getJson()
     {
         return $this->json;
     }
