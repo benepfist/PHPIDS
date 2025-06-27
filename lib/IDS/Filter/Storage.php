@@ -69,7 +69,7 @@ class Storage
     /**
      * Cache container
      *
-     * @var object|null IDS_Caching wrapper
+     * @var \IDS\Caching\CacheInterface|null IDS_Caching wrapper
      */
     protected $cache = null;
 
@@ -101,7 +101,10 @@ class Storage
 
             if ($caching && $caching !== 'none') {
                 $this->cacheSettings = $init->config['Caching'];
-                $this->cache = CacheFactory::factory($init, 'storage');
+                $cache = CacheFactory::factory($init, 'storage');
+                if ($cache instanceof \IDS\Caching\CacheInterface) {
+                    $this->cache = $cache;
+                }
             }
 
             switch ($type) {
@@ -309,7 +312,11 @@ class Storage
                         sprintf('Invalid config: %s doesn\'t exist.', $this->source)
                     );
                 }
-                $filters = json_decode(file_get_contents($this->source));
+                $json = file_get_contents($this->source);
+                if ($json === false) {
+                    throw new \RuntimeException('JSON file could not be read.');
+                }
+                $filters = json_decode($json);
             }
 
             if (!$filters) {

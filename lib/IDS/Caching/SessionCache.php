@@ -56,12 +56,6 @@ class SessionCache implements CacheInterface
      */
     private $type = null;
 
-    /**
-     * Cache configuration
-     *
-     * @var array<string, mixed>
-     */
-    private $config = null;
 
     /**
      * Holds an instance of this class
@@ -74,21 +68,21 @@ class SessionCache implements CacheInterface
      * Constructor
      *
      * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
     public function __construct($type, $init)
     {
         $this->type   = $type;
-        $this->config = $init->config['Caching'];
+        unset($init);
     }
 
     /**
      * Returns an instance of this class
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */

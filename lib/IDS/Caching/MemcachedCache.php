@@ -66,7 +66,7 @@ class MemcachedCache implements CacheInterface
     /**
      * Memcache object
      *
-     * @var object
+     * @var \Memcache|null
      */
     private $memcache = null;
 
@@ -118,12 +118,12 @@ class MemcachedCache implements CacheInterface
     public function setCache(array $data)
     {
         if (!$this->isCached) {
-            $this->memcache->set(
-                $this->config['key_prefix'] . '.storage',
-                $data,
-                false,
-                $this->config['expiration_time']
-            );
+                $this->memcache->set(
+                    $this->config['key_prefix'] . '.storage',
+                    $data,
+                    0,
+                    $this->config['expiration_time']
+                );
         }
 
         return $this;
