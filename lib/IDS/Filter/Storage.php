@@ -62,7 +62,7 @@ class Storage
     /**
      * Holds caching settings
      *
-     * @var array
+     * @var array<string, mixed>|null
      */
     protected $cacheSettings = null;
 
@@ -76,7 +76,7 @@ class Storage
     /**
      * Filter container
      *
-     * @var array
+     * @var \IDS\Filter[]
      */
     protected $filterSet = array();
 
@@ -120,11 +120,11 @@ class Storage
     /**
      * Sets the filter array
      *
-     * @param array $filterSet array containing multiple IDS_Filter instances
+     * @param \IDS\Filter[] $filterSet array containing multiple IDS_Filter instances
      *
      * @return object $this
      */
-    final public function setFilterSet($filterSet)
+    final public function setFilterSet(array $filterSet)
     {
         foreach ($filterSet as $filter) {
             $this->addFilter($filter);
@@ -136,7 +136,7 @@ class Storage
     /**
      * Returns registered filters
      *
-     * @return array
+     * @return \IDS\Filter[]
      */
     final public function getFilterSet()
     {
@@ -377,7 +377,8 @@ class Storage
      * This functions adds an array of filters to the IDS_Storage object.
      * Each entry within the array is expected to be an simple array containing all parts of the filter.
      * 
-     * @param array $filters
+     * @param array<int, array<string, mixed>> $filters
+     * @return void
      */
     private function addFiltersFromArray(array $filters)
     {

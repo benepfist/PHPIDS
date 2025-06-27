@@ -49,7 +49,7 @@ interface CacheInterface
     /**
      * Interface method
      *
-     * @param array $data the cache data
+     * @param array<int|string, mixed> $data the cache data
      *
      * @return void
      */

@@ -81,7 +81,7 @@ class DatabaseCache implements CacheInterface
     /**
      * Cache configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $config = null;
 
@@ -138,7 +138,7 @@ class DatabaseCache implements CacheInterface
     /**
      * Writes cache data into the database
      *
-     * @param array $data the caching data
+     * @param array<int|string, mixed> $data the caching data
      *
      * @throws \PDOException if a db error occurred
      * @return object       $this
@@ -236,7 +236,7 @@ class DatabaseCache implements CacheInterface
      * Write the cache data to the table
      *
      * @param object $handle the database handle
-     * @param array  $data   the caching data
+     * @param array<int|string, mixed>  $data   the caching data
      *
      * @return void
      * @throws \PDOException if a db error occurred

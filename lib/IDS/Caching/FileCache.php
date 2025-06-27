@@ -54,7 +54,7 @@ class FileCache implements CacheInterface
     /**
      * Cache configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $config;
 
@@ -113,7 +113,7 @@ class FileCache implements CacheInterface
     /**
      * Writes cache data into the file
      *
-     * @param array $data the cache data
+     * @param array<int|string, mixed> $data the cache data
      *
      * @throws \Exception if cache file couldn't be created
      * @return object    $this
