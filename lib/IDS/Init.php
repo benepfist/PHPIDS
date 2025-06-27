@@ -96,7 +96,11 @@ class Init
             if (!file_exists($configPath) || !is_readable($configPath)) {
                 throw new \InvalidArgumentException("Invalid config path '$configPath'");
             }
-            self::$instances[$configPath] = new self(parse_ini_file($configPath, true));
+            $parsed = parse_ini_file($configPath, true);
+            if ($parsed === false) {
+                throw new \RuntimeException("Unable to parse config file '$configPath'");
+            }
+            self::$instances[$configPath] = new self($parsed);
         }
 
         return self::$instances[$configPath];

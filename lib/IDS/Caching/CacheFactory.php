@@ -52,10 +52,10 @@ class CacheFactory
     /**
      * Factory method
      *
-     * @param object $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      * @param string $type the caching type
      *
-     * @return object the caching facility
+     * @return \IDS\Caching\CacheInterface|false the caching facility
      */
     public static function factory($init, $type)
     {

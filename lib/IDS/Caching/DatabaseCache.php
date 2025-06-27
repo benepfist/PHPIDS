@@ -201,11 +201,11 @@ class DatabaseCache implements CacheInterface
     /**
      * Connect to database and return a handle
      *
-     * @return object       PDO
+     * @return \PDO       PDO
      * @throws \Exception    if connection parameters are faulty
      * @throws \PDOException if a db error occurred
      */
-    private function connect()
+    private function connect(): \PDO
     {
         // validate connection parameters
         if (!$this->config['wrapper']
@@ -235,13 +235,13 @@ class DatabaseCache implements CacheInterface
     /**
      * Write the cache data to the table
      *
-     * @param object $handle the database handle
+     * @param \PDO   $handle the database handle
      * @param array<int|string, mixed>  $data   the caching data
      *
      * @return void
      * @throws \PDOException if a db error occurred
      */
-    private function write($handle, $data)
+    private function write(\PDO $handle, $data)
     {
         try {
             $handle->query('TRUNCATE ' . $this->config['table'].'');

@@ -162,7 +162,12 @@ class FileCache implements CacheInterface
             return false;
         }
 
-        $data = unserialize(file_get_contents($this->path));
+        $content = file_get_contents($this->path);
+        if ($content === false) {
+            return false;
+        }
+
+        $data = unserialize($content);
 
         return $data;
     }

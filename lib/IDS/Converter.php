@@ -154,9 +154,11 @@ class Converter
 
                 if (preg_match_all('/\d*[+-\/\* ]\d+/', $char, $matches)) {
                     $match = preg_split('/(\W?\d+)/', implode('', $matches[0]), -1, PREG_SPLIT_DELIM_CAPTURE);
+                    $match = $match === false ? [] : $match;
 
-                    if (array_sum($match) >= 20 && array_sum($match) <= 127) {
-                        $converted .= chr(array_sum($match));
+                    $sum = array_sum($match);
+                    if ($sum >= 20 && $sum <= 127) {
+                        $converted .= chr((int) $sum);
                     }
 
                 } elseif (!empty($char) && $char >= 20 && $char <= 127) {
@@ -174,7 +176,7 @@ class Converter
 
             foreach (array_map('octdec', array_filter($charcode)) as $char) {
                 if (20 <= $char && $char <= 127) {
-                    $converted .= chr($char);
+                    $converted .= chr((int) $char);
                 }
             }
             $value .= "\n" . $converted;
@@ -187,7 +189,7 @@ class Converter
 
             foreach (array_map('hexdec', array_filter($charcode)) as $char) {
                 if (20 <= $char && $char <= 127) {
-                    $converted .= chr($char);
+                    $converted .= chr((int) $char);
                 }
             }
             $value .= "\n" . $converted;
@@ -276,7 +278,7 @@ class Converter
                 $converted = '';
                 foreach (str_split($match, 2) as $hex_index) {
                     if (preg_match('/[a-f\d]{2,3}/i', $hex_index)) {
-                        $converted .= chr(hexdec($hex_index));
+                        $converted .= chr((int) hexdec($hex_index));
                     }
                 }
                 $value = str_replace($match, $converted, $value);
@@ -478,7 +480,7 @@ class Converter
 
         if (!empty($matches[0])) {
             foreach ($matches[0] as $match) {
-                $chr = chr(hexdec(substr($match, 2, 4)));
+                $chr = chr((int) hexdec(substr($match, 2, 4)));
                 $value = str_replace($match, $chr, $value);
             }
             $value .= "\n\u0001";

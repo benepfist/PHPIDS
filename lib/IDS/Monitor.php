@@ -395,11 +395,14 @@ class Monitor
         $array1 = preg_split('/(?<!^)(?!$)/u', html_entity_decode(urldecode($original)));
         $array2 = preg_split('/(?<!^)(?!$)/u', $purified);
 
-        // create an array containing the single character differences
-        $differences = array_diff_assoc($array1, $array2);
-
+        if ($array1 === false || $array2 === false) {
+            $differences = '';
+        } else {
+            // create an array containing the single character differences
+            $differences = implode('', array_diff_assoc($array1, $array2));
+        }
         // return the diff - ready to hit the converter and the rules
-        $differences = trim(implode('', $differences));
+        $differences = trim($differences);
         $diff = $length <= 10 ? $differences : mb_substr($differences, 0, strlen($original));
 
         // clean up spaces between tag delimiters
@@ -459,7 +462,12 @@ class Monitor
         if (is_string($key) && is_string($value)) {
             $this->tmpJsonString .=  $key . " " . $value . "\n";
         } else {
-            $this->jsonDecodeValues(json_encode($key), json_encode($value));
+            $encodedKey = json_encode($key);
+            $encodedValue = json_encode($value);
+            $this->jsonDecodeValues(
+                $encodedKey === false ? '' : $encodedKey,
+                $encodedValue === false ? '' : $encodedValue
+            );
         }
     }
 

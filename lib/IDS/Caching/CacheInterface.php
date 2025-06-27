@@ -58,7 +58,7 @@ interface CacheInterface
     /**
      * Interface method
      *
-     * @return void
+     * @return mixed
      */
     public function getCache();
 }
