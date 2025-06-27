@@ -95,7 +95,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return Report
      */
-    public function __construct(array $events = null)
+    public function __construct(?array $events = null)
     {
         foreach ((array) $events as $event) {
             $this->addEvent($event);
@@ -199,6 +199,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return integer
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->events);
@@ -213,6 +214,7 @@ class Report implements \Countable, \IteratorAggregate
      *
      * @return \Iterator the event collection
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->events);

@@ -51,6 +51,13 @@ namespace IDS;
 class Filter
 {
     /**
+     * Filter ID
+     *
+     * @var integer
+     */
+    protected $id = 0;
+
+    /**
      * Filter rule
      *
      * @var string
