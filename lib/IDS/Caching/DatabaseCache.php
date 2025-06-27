@@ -88,9 +88,9 @@ class DatabaseCache implements CacheInterface
     /**
      * Database connection handle
      *
-     * @var \PDO|null
+     * @var \PDO
      */
-    private $handle = null;
+    private $handle;
 
     /**
      * Holds an instance of this class

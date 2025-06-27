@@ -94,16 +94,16 @@ class Converter
                 '/(?:--[^-]*-)/ms'
             );
 
-            $converted = preg_replace($pattern, ';', $value);
+            $converted = (string) preg_replace($pattern, ';', $value);
             $value    .= "\n" . $converted;
         }
 
         //make sure inline comments are detected and converted correctly
-        $value = preg_replace('/(<\w+)\/+(\w+=?)/m', '$1/$2', $value);
-        $value = preg_replace('/[^\\\:]\/\/(.*)$/m', '/**/$1', $value);
-        $value = preg_replace('/([^\-&])#.*[\r\n\v\f]/m', '$1', $value);
-        $value = preg_replace('/([^&\-])#.*\n/m', '$1 ', $value);
-        $value = preg_replace('/^#.*\n/m', ' ', $value);
+        $value = (string) preg_replace('/(<\w+)\/+(\w+=?)/m', '$1/$2', $value);
+        $value = (string) preg_replace('/[^\\\:]\/\/(.*)$/m', '/**/$1', $value);
+        $value = (string) preg_replace('/([^\-&])#.*[\r\n\v\f]/m', '$1', $value);
+        $value = (string) preg_replace('/([^&\-])#.*\n/m', '$1 ', $value);
+        $value = (string) preg_replace('/^#.*\n/m', ' ', $value);
 
         return $value;
     }
@@ -126,7 +126,7 @@ class Converter
         $value = str_replace('�', ' ', $value);
 
         //convert real linebreaks
-        return preg_replace('/(?:\n|\r|\v)/m', '  ', $value);
+        return (string) preg_replace('/(?:\n|\r|\v)/m', '  ', $value);
     }
 
     /**
@@ -725,8 +725,10 @@ class Converter
             );
 
             if ($stripped_length != 0 && $overall_length/$stripped_length <= $threshold) {
-                $monitor->centrifuge['ratio']     = $overall_length / $stripped_length;
-                $monitor->centrifuge['threshold'] =$threshold;
+                if ($monitor !== null) {
+                    $monitor->centrifuge['ratio']     = $overall_length / $stripped_length;
+                    $monitor->centrifuge['threshold'] = $threshold;
+                }
 
                 $value .= "\n$[!!!]";
             }
@@ -770,7 +772,9 @@ class Converter
             $converted = implode($array);
 
             if (preg_match('/(?:\({2,}\+{2,}:{2,})|(?:\({2,}\+{2,}:+)|(?:\({3,}\++:{2,})/', $converted)) {
-                $monitor->centrifuge['converted'] = $converted;
+                if ($monitor !== null) {
+                    $monitor->centrifuge['converted'] = $converted;
+                }
 
                 return $value . "\n" . $converted;
             }

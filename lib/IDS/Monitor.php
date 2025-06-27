@@ -357,7 +357,7 @@ class Monitor
      * @param string $plain    the string without html
      * @since 0.5
      *
-     * @return string the difference between the strings
+     * @return string|null the difference between the strings
      */
     private function diff($original, $purified, $plain)
     {
