@@ -244,7 +244,7 @@ class Storage
                 
                     $this->addFilter(
                             new \IDS\Filter(
-                                    $id,
+                                    (int) $id,
                                     $rule,
                                     $description,
                                     (array) $tags[0],
@@ -337,7 +337,7 @@ class Storage
     
                     $this->addFilter(
                         new \IDS\Filter(
-                            $id,
+                            (int) $id,
                             $rule,
                             $description,
                             (array) $tags[0],
