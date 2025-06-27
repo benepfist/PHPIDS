@@ -78,7 +78,9 @@ class ApcCache implements CacheInterface
      */
     public function __construct($init)
     {
-        $this->config = $init->config['Caching'];
+        /** @var array<string, mixed> $config */
+        $config = $init->config['Caching'];
+        $this->config = $config;
     }
 
     /**
@@ -107,10 +109,12 @@ class ApcCache implements CacheInterface
     public function setCache(array $data)
     {
         if (!$this->isCached) {
+            /** @var int $ttl */
+            $ttl = $this->config['expiration_time'];
             apc_store(
                 $this->config['key_prefix'] . '.storage',
                 $data,
-                $this->config['expiration_time']
+                $ttl
             );
         }
 

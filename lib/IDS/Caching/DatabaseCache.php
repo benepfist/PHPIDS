@@ -112,7 +112,9 @@ class DatabaseCache implements CacheInterface
     public function __construct($type, $init)
     {
         $this->type   = $type;
-        $this->config = $init->config['Caching'];
+        /** @var array<string, mixed> $config */
+        $config       = $init->config['Caching'];
+        $this->config = $config;
         $this->handle = $this->connect();
     }
 
@@ -156,8 +158,10 @@ class DatabaseCache implements CacheInterface
 
             foreach ($rows as $row) {
 
-                if ((time()-strtotime($row['created'])) >
-                    $this->config['expiration_time']) {
+                /** @var int $ttl */
+                $ttl = $this->config['expiration_time'];
+                if ((time() - strtotime((string) $row['created'])) >
+                    $ttl) {
 
                     $this->write($handle, $data);
                 }
@@ -188,7 +192,9 @@ class DatabaseCache implements CacheInterface
             $result->execute(array($this->type));
 
             foreach ($result as $row) {
-                return unserialize($row['data']);
+                /** @var string $data */
+                $data = $row['data'];
+                return unserialize($data);
             }
 
         } catch (\PDOException $e) {
@@ -218,10 +224,16 @@ class DatabaseCache implements CacheInterface
 
         // try to connect
         try {
+            /** @var string $dsn */
+            $dsn = $this->config['wrapper'];
+            /** @var string $user */
+            $user = $this->config['user'];
+            /** @var string $password */
+            $password = $this->config['password'];
             $handle = new \PDO(
-                $this->config['wrapper'],
-                $this->config['user'],
-                $this->config['password']
+                $dsn,
+                $user,
+                $password
             );
             $handle->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 

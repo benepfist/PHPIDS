@@ -57,13 +57,14 @@ class CacheFactory
      *
      * @return \IDS\Caching\CacheInterface|false the caching facility
      */
-    public static function factory($init, $type)
+    public static function factory($init, $type): CacheInterface|false
     {
         $object  = false;
+        $config  = (array) $init->config['Caching'];
         $wrapper = preg_replace(
             '/\W+/m',
             '',
-            ucfirst($init->config['Caching']['caching'])
+            ucfirst((string) $config['caching'])
         );
         $class   = '\\IDS\\Caching\\' . $wrapper . 'Cache';
         $path    = dirname(__FILE__) . DIRECTORY_SEPARATOR . $wrapper . 'Cache.php';
