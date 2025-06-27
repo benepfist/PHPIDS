@@ -104,8 +104,8 @@ class DatabaseCache implements CacheInterface
      *
      * Connects to database.
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
@@ -120,8 +120,8 @@ class DatabaseCache implements CacheInterface
      * Returns an instance of this class
      *
      * @static
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
@@ -140,7 +140,7 @@ class DatabaseCache implements CacheInterface
      *
      * @param array $data the caching data
      *
-     * @throws PDOException if a db error occurred
+     * @throws \PDOException if a db error occurred
      * @return object       $this
      */
     public function setCache(array $data)
@@ -173,7 +173,7 @@ class DatabaseCache implements CacheInterface
      * Note that this method returns false if either type or file cache is
      * not set
      *
-     * @throws PDOException if a db error occurred
+     * @throws \PDOException if a db error occurred
      * @return mixed        cache data or false
      */
     public function getCache()
@@ -202,8 +202,8 @@ class DatabaseCache implements CacheInterface
      * Connect to database and return a handle
      *
      * @return object       PDO
-     * @throws Exception    if connection parameters are faulty
-     * @throws PDOException if a db error occurred
+     * @throws \Exception    if connection parameters are faulty
+     * @throws \PDOException if a db error occurred
      */
     private function connect()
     {
@@ -239,7 +239,7 @@ class DatabaseCache implements CacheInterface
      * @param array  $data   the caching data
      *
      * @return void
-     * @throws PDOException if a db error occurred
+     * @throws \PDOException if a db error occurred
      */
     private function write($handle, $data)
     {

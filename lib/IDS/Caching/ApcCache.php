@@ -78,8 +78,8 @@ class ApcCache implements CacheInterface
     /**
      * Constructor
      *
-     * @param string $type caching type
-     * @param array  $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
@@ -92,8 +92,8 @@ class ApcCache implements CacheInterface
     /**
      * Returns an instance of this class
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */

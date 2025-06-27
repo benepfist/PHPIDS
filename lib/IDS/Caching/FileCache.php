@@ -81,8 +81,8 @@ class FileCache implements CacheInterface
     /**
      * Constructor
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      * @throws \Exception
      *
      * @return void
@@ -105,8 +105,8 @@ class FileCache implements CacheInterface
     /**
      * Returns an instance of this class
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
@@ -124,7 +124,7 @@ class FileCache implements CacheInterface
      *
      * @param array $data the cache data
      *
-     * @throws Exception if cache file couldn't be created
+     * @throws \Exception if cache file couldn't be created
      * @return object    $this
      */
     public function setCache(array $data)
