@@ -47,12 +47,6 @@ namespace IDS\Caching;
  */
 class ApcCache implements CacheInterface
 {
-    /**
-     * Caching type
-     *
-     * @var string
-     */
-    private $type = null;
 
     /**
      * Cache configuration
@@ -71,36 +65,33 @@ class ApcCache implements CacheInterface
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance = null;
 
     /**
      * Constructor
      *
-     * @param string   $type caching type
      * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
-    public function __construct($type, $init)
+    public function __construct($init)
     {
-        $this->type   = $type;
         $this->config = $init->config['Caching'];
     }
 
     /**
      * Returns an instance of this class
      *
-     * @param string   $type caching type
      * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
-    public static function getInstance($type, $init)
+    public static function getInstance($init)
     {
         if (!self::$cachingInstance) {
-            self::$cachingInstance = new ApcCache($type, $init);
+            self::$cachingInstance = new ApcCache($init);
         }
 
         return self::$cachingInstance;

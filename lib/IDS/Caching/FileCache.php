@@ -50,12 +50,6 @@ use IDS\Init;
  */
 class FileCache implements CacheInterface
 {
-    /**
-     * Caching type
-     *
-     * @var string
-     */
-    private $type;
 
     /**
      * Cache configuration
@@ -74,22 +68,20 @@ class FileCache implements CacheInterface
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance;
 
     /**
      * Constructor
      *
-     * @param string   $type caching type
      * @param \IDS\Init $init the IDS_Init object
      * @throws \Exception
      *
      * @return void
      */
-    public function __construct($type, Init $init)
+    public function __construct(Init $init)
     {
-        $this->type   = $type;
         $this->config = $init->config['Caching'];
         $this->path   = $init->getBasePath() . $this->config['path'];
 
@@ -105,15 +97,14 @@ class FileCache implements CacheInterface
     /**
      * Returns an instance of this class
      *
-     * @param string   $type caching type
      * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
-    public static function getInstance($type, $init)
+    public static function getInstance($init)
     {
         if (!self::$cachingInstance) {
-            self::$cachingInstance = new FileCache($type, $init);
+            self::$cachingInstance = new FileCache($init);
         }
 
         return self::$cachingInstance;

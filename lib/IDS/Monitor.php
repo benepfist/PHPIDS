@@ -226,7 +226,7 @@ class Monitor
         // check if this field is part of the exceptions
         foreach ($this->exceptions as $exception) {
             $matches = array();
-            if (($exception === $key) || preg_match('((/.*/[^eE]*)$)', $exception, $matches) && isset($matches[1]) && preg_match($matches[1], $key)) {
+            if (($exception === $key) || (preg_match('((/.*/[^eE]*)$)', $exception, $matches) && preg_match($matches[1], $key))) {
                 return array();
             }
         }

@@ -69,7 +69,7 @@ class Storage
     /**
      * Cache container
      *
-     * @var object IDS_Caching wrapper
+     * @var object|null IDS_Caching wrapper
      */
     protected $cache = null;
 

@@ -144,18 +144,16 @@ class Init
      * @param  array $successor The hash which values count more when in doubt
      * @return array Merged hash
      */
-    protected function mergeConfig($current, $successor)
+    protected function mergeConfig(array $current, array $successor)
     {
-        if (is_array($current) and is_array($successor)) {
-            foreach ($successor as $key => $value) {
-                if (isset($current[$key])
-                    and is_array($value)
-                    and is_array($current[$key])) {
+        foreach ($successor as $key => $value) {
+            if (isset($current[$key])
+                && is_array($value)
+                && is_array($current[$key])) {
 
-                    $current[$key] = $this->mergeConfig($current[$key], $value);
-                } else {
-                    $current[$key] = $successor[$key];
-                }
+                $current[$key] = $this->mergeConfig($current[$key], $value);
+            } else {
+                $current[$key] = $successor[$key];
             }
         }
 

@@ -86,16 +86,16 @@ class DatabaseCache implements CacheInterface
     private $config = null;
 
     /**
-     * DBH
+     * Database connection handle
      *
-     * @var object
+     * @var \PDO|null
      */
     private $handle = null;
 
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance = null;
 
