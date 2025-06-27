@@ -82,7 +82,9 @@ class FileCache implements CacheInterface
      */
     public function __construct(Init $init)
     {
-        $this->config = $init->config['Caching'];
+        /** @var array<string, mixed> $config */
+        $config = $init->config['Caching'];
+        $this->config = $config;
         $this->path   = $init->getBasePath() . $this->config['path'];
 
         if (file_exists($this->path) && !is_writable($this->path)) {
@@ -181,6 +183,8 @@ class FileCache implements CacheInterface
      */
     private function isValidFile($file)
     {
-        return file_exists($file) && time() - filectime($file) <= $this->config['expiration_time'];
+        /** @var int $ttl */
+        $ttl = $this->config['expiration_time'];
+        return file_exists($file) && time() - filectime($file) <= $ttl;
     }
 }

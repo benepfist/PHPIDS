@@ -86,8 +86,10 @@ class MemcachedCache implements CacheInterface
      */
     public function __construct($init)
     {
-        
-        $this->config = $init->config['Caching'];
+
+        /** @var array<string, mixed> $config */
+        $config = $init->config['Caching'];
+        $this->config = $config;
 
         $this->connect();
     }
@@ -118,11 +120,13 @@ class MemcachedCache implements CacheInterface
     public function setCache(array $data)
     {
         if (!$this->isCached) {
+                /** @var int $ttl */
+                $ttl = $this->config['expiration_time'];
                 $this->memcache->set(
                     $this->config['key_prefix'] . '.storage',
                     $data,
                     0,
-                    $this->config['expiration_time']
+                    $ttl
                 );
         }
 
@@ -160,9 +164,13 @@ class MemcachedCache implements CacheInterface
         if ($this->config['host'] && $this->config['port']) {
             // establish the memcache connection
             $this->memcache = new \Memcache;
+            /** @var string $host */
+            $host = $this->config['host'];
+            /** @var int $port */
+            $port = $this->config['port'];
             $this->memcache->pconnect(
-                $this->config['host'],
-                $this->config['port']
+                $host,
+                $port
             );
 
         } else {
