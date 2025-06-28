@@ -48,17 +48,11 @@ namespace IDS\Caching;
  */
 class ApcCache implements CacheInterface
 {
-    /**
-     * Caching type
-     *
-     * @var string
-     */
-    private $type = null;
 
     /**
      * Cache configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $config = null;
 
@@ -72,36 +66,35 @@ class ApcCache implements CacheInterface
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance = null;
 
     /**
      * Constructor
      *
-     * @param string $type caching type
-     * @param array  $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
-    public function __construct($type, $init)
+    public function __construct($init)
     {
-        $this->type   = $type;
-        $this->config = $init->config['Caching'];
+        /** @var array<string, mixed> $config */
+        $config = $init->config['Caching'];
+        $this->config = $config;
     }
 
     /**
      * Returns an instance of this class
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
-    public static function getInstance($type, $init)
+    public static function getInstance($init)
     {
         if (!self::$cachingInstance) {
-            self::$cachingInstance = new ApcCache($type, $init);
+            self::$cachingInstance = new ApcCache($init);
         }
 
         return self::$cachingInstance;
@@ -110,17 +103,19 @@ class ApcCache implements CacheInterface
     /**
      * Writes cache data
      *
-     * @param array $data the caching data
+     * @param array<int|string, mixed> $data the caching data
      *
      * @return object $this
      */
     public function setCache(array $data): self
     {
         if (!$this->isCached) {
+            /** @var int $ttl */
+            $ttl = $this->config['expiration_time'];
             apc_store(
                 $this->config['key_prefix'] . '.storage',
                 $data,
-                $this->config['expiration_time']
+                $ttl
             );
         }
 

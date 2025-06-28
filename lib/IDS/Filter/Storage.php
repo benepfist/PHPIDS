@@ -62,21 +62,21 @@ class Storage
     /**
      * Holds caching settings
      *
-     * @var array
+     * @var array<string, mixed>|null
      */
     protected $cacheSettings = null;
 
     /**
      * Cache container
      *
-     * @var object IDS_Caching wrapper
+     * @var \IDS\Caching\CacheInterface|null IDS_Caching wrapper
      */
     protected $cache = null;
 
     /**
      * Filter container
      *
-     * @var array
+     * @var \IDS\Filter[]
      */
     protected $filterSet = array();
 
@@ -85,7 +85,7 @@ class Storage
      *
      * Loads filters based on provided IDS_Init settings.
      *
-     * @param object $init IDS_Init instance
+     * @param \IDS\Init $init IDS_Init instance
      *
      * @throws \InvalidArgumentException if unsupported filter type is given
      * @return void
@@ -101,14 +101,19 @@ class Storage
 
             if ($caching && $caching !== 'none') {
                 $this->cacheSettings = $init->config['Caching'];
-                $this->cache = CacheFactory::factory($init, 'storage');
+                $cache = CacheFactory::factory($init, 'storage');
+                if ($cache instanceof \IDS\Caching\CacheInterface) {
+                    $this->cache = $cache;
+                }
             }
 
             switch ($type) {
                 case 'xml':
-                    return $this->getFilterFromXML();
+                    $this->getFilterFromXML();
+                    break;
                 case 'json':
-                    return $this->getFilterFromJson();
+                    $this->getFilterFromJson();
+                    break;
                 default:
                     throw new \InvalidArgumentException('Unsupported filter type.');
             }
@@ -118,11 +123,11 @@ class Storage
     /**
      * Sets the filter array
      *
-     * @param array $filterSet array containing multiple IDS_Filter instances
+     * @param \IDS\Filter[] $filterSet array containing multiple IDS_Filter instances
      *
      * @return object $this
      */
-    final public function setFilterSet($filterSet)
+    final public function setFilterSet(array $filterSet)
     {
         foreach ($filterSet as $filter) {
             $this->addFilter($filter);
@@ -134,7 +139,7 @@ class Storage
     /**
      * Returns registered filters
      *
-     * @return array
+     * @return \IDS\Filter[]
      */
     final public function getFilterSet()
     {
@@ -144,7 +149,7 @@ class Storage
     /**
      * Adds a filter
      *
-     * @param object $filter IDS_Filter instance
+     * @param \IDS\Filter $filter IDS_Filter instance
      *
      * @return object $this
      */
@@ -242,7 +247,7 @@ class Storage
                 
                     $this->addFilter(
                             new \IDS\Filter(
-                                    $id,
+                                    (int) $id,
                                     $rule,
                                     $description,
                                     (array) $tags[0],
@@ -262,7 +267,7 @@ class Storage
                 /*
                  * If caching is enabled, the fetched data will be cached
                 */
-                if ($this->cacheSettings) {
+                if ($this->cacheSettings && $this->cache !== null) {
                     $this->cache->setCache($data);
                 }
                 
@@ -307,7 +312,11 @@ class Storage
                         sprintf('Invalid config: %s doesn\'t exist.', $this->source)
                     );
                 }
-                $filters = json_decode(file_get_contents($this->source));
+                $json = file_get_contents($this->source);
+                if ($json === false) {
+                    throw new \RuntimeException('JSON file could not be read.');
+                }
+                $filters = json_decode($json);
             }
 
             if (!$filters) {
@@ -335,7 +344,7 @@ class Storage
     
                     $this->addFilter(
                         new \IDS\Filter(
-                            $id,
+                            (int) $id,
                             $rule,
                             $description,
                             (array) $tags[0],
@@ -355,7 +364,7 @@ class Storage
                 /*
                  * If caching is enabled, the fetched data will be cached
                  */
-                if ($this->cacheSettings) {
+                if ($this->cacheSettings && $this->cache !== null) {
                     $this->cache->setCache($data);
                 }
                 
@@ -375,7 +384,8 @@ class Storage
      * This functions adds an array of filters to the IDS_Storage object.
      * Each entry within the array is expected to be an simple array containing all parts of the filter.
      * 
-     * @param array $filters
+     * @param array<int, array<string, mixed>> $filters
+     * @return void
      */
     private function addFiltersFromArray(array $filters)
     {

@@ -82,21 +82,21 @@ class DatabaseCache implements CacheInterface
     /**
      * Cache configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $config = null;
 
     /**
-     * DBH
+     * Database connection handle
      *
-     * @var object
+     * @var \PDO
      */
-    private $handle = null;
+    private $handle;
 
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance = null;
 
@@ -105,15 +105,17 @@ class DatabaseCache implements CacheInterface
      *
      * Connects to database.
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
     public function __construct($type, $init)
     {
         $this->type   = $type;
-        $this->config = $init->config['Caching'];
+        /** @var array<string, mixed> $config */
+        $config       = $init->config['Caching'];
+        $this->config = $config;
         $this->handle = $this->connect();
     }
 
@@ -121,8 +123,8 @@ class DatabaseCache implements CacheInterface
      * Returns an instance of this class
      *
      * @static
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param string   $type caching type
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
@@ -139,9 +141,9 @@ class DatabaseCache implements CacheInterface
     /**
      * Writes cache data into the database
      *
-     * @param array $data the caching data
+     * @param array<int|string, mixed> $data the caching data
      *
-     * @throws PDOException if a db error occurred
+     * @throws \PDOException if a db error occurred
      * @return object       $this
      */
     public function setCache(array $data): self
@@ -157,8 +159,10 @@ class DatabaseCache implements CacheInterface
 
             foreach ($rows as $row) {
 
-                if ((time()-strtotime($row['created'])) >
-                    $this->config['expiration_time']) {
+                /** @var int $ttl */
+                $ttl = $this->config['expiration_time'];
+                if ((time() - strtotime((string) $row['created'])) >
+                    $ttl) {
 
                     $this->write($handle, $data);
                 }
@@ -174,7 +178,7 @@ class DatabaseCache implements CacheInterface
      * Note that this method returns false if either type or file cache is
      * not set
      *
-     * @throws PDOException if a db error occurred
+     * @throws \PDOException if a db error occurred
      * @return mixed        cache data or false
      */
     public function getCache(): mixed
@@ -189,7 +193,9 @@ class DatabaseCache implements CacheInterface
             $result->execute(array($this->type));
 
             foreach ($result as $row) {
-                return unserialize($row['data']);
+                /** @var string $data */
+                $data = $row['data'];
+                return unserialize($data);
             }
 
         } catch (\PDOException $e) {
@@ -202,11 +208,11 @@ class DatabaseCache implements CacheInterface
     /**
      * Connect to database and return a handle
      *
-     * @return object       PDO
-     * @throws Exception    if connection parameters are faulty
-     * @throws PDOException if a db error occurred
+     * @return \PDO       PDO
+     * @throws \Exception    if connection parameters are faulty
+     * @throws \PDOException if a db error occurred
      */
-    private function connect()
+    private function connect(): \PDO
     {
         // validate connection parameters
         if (!$this->config['wrapper']
@@ -219,10 +225,16 @@ class DatabaseCache implements CacheInterface
 
         // try to connect
         try {
+            /** @var string $dsn */
+            $dsn = $this->config['wrapper'];
+            /** @var string $user */
+            $user = $this->config['user'];
+            /** @var string $password */
+            $password = $this->config['password'];
             $handle = new \PDO(
-                $this->config['wrapper'],
-                $this->config['user'],
-                $this->config['password']
+                $dsn,
+                $user,
+                $password
             );
             $handle->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
@@ -236,13 +248,13 @@ class DatabaseCache implements CacheInterface
     /**
      * Write the cache data to the table
      *
-     * @param object $handle the database handle
-     * @param array  $data   the caching data
+     * @param \PDO   $handle the database handle
+     * @param array<int|string, mixed>  $data   the caching data
      *
-     * @return object       PDO
-     * @throws PDOException if a db error occurred
+     * @return void
+     * @throws \PDOException if a db error occurred
      */
-    private function write($handle, $data)
+    private function write(\PDO $handle, $data)
     {
         try {
             $handle->query('TRUNCATE ' . $this->config['table'].'');

@@ -49,17 +49,11 @@ namespace IDS\Caching;
  */
 class MemcachedCache implements CacheInterface
 {
-    /**
-     * Caching type
-     *
-     * @var string
-     */
-    private $type = null;
 
     /**
      * Cache configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $config = null;
 
@@ -73,30 +67,30 @@ class MemcachedCache implements CacheInterface
     /**
      * Memcache object
      *
-     * @var object
+     * @var \Memcache
      */
-    private $memcache = null;
+    private $memcache;
 
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance = null;
 
     /**
      * Constructor
      *
-     * @param string $type caching type
-     * @param array  $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return void
      */
-    public function __construct($type, $init)
+    public function __construct($init)
     {
 
-        $this->type   = $type;
-        $this->config = $init->config['Caching'];
+        /** @var array<string, mixed> $config */
+        $config = $init->config['Caching'];
+        $this->config = $config;
 
         $this->connect();
     }
@@ -104,15 +98,14 @@ class MemcachedCache implements CacheInterface
     /**
      * Returns an instance of this class
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
-    public static function getInstance($type, $init)
+    public static function getInstance($init)
     {
         if (!self::$cachingInstance) {
-            self::$cachingInstance = new MemcachedCache($type, $init);
+            self::$cachingInstance = new MemcachedCache($init);
         }
 
         return self::$cachingInstance;
@@ -121,19 +114,21 @@ class MemcachedCache implements CacheInterface
     /**
      * Writes cache data
      *
-     * @param array $data the caching data
+     * @param array<int|string, mixed> $data the caching data
      *
      * @return object $this
      */
     public function setCache(array $data): self
     {
         if (!$this->isCached) {
-            $this->memcache->set(
-                $this->config['key_prefix'] . '.storage',
-                $data,
-                false,
-                $this->config['expiration_time']
-            );
+                /** @var int $ttl */
+                $ttl = $this->config['expiration_time'];
+                $this->memcache->set(
+                    $this->config['key_prefix'] . '.storage',
+                    $data,
+                    0,
+                    $ttl
+                );
         }
 
         return $this;
@@ -161,7 +156,7 @@ class MemcachedCache implements CacheInterface
     /**
      * Connect to the memcached server
      *
-     * @throws Exception if connection parameters are insufficient
+     * @throws \Exception if connection parameters are insufficient
      * @return void
      */
     private function connect()
@@ -170,9 +165,13 @@ class MemcachedCache implements CacheInterface
         if ($this->config['host'] && $this->config['port']) {
             // establish the memcache connection
             $this->memcache = new \Memcache;
+            /** @var string $host */
+            $host = $this->config['host'];
+            /** @var int $port */
+            $port = $this->config['port'];
             $this->memcache->pconnect(
-                $this->config['host'],
-                $this->config['port']
+                $host,
+                $port
             );
 
         } else {

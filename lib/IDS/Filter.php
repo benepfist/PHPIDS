@@ -57,6 +57,7 @@ class Filter
      * @var int
      */
     protected int $id;
+
     /**
      * Filter rule
      *

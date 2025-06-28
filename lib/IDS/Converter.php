@@ -94,16 +94,16 @@ class Converter
                 '/(?:--[^-]*-)/ms'
             );
 
-            $converted = preg_replace($pattern, ';', $value);
+            $converted = (string) preg_replace($pattern, ';', $value);
             $value    .= "\n" . $converted;
         }
 
         //make sure inline comments are detected and converted correctly
-        $value = preg_replace('/(<\w+)\/+(\w+=?)/m', '$1/$2', $value);
-        $value = preg_replace('/[^\\\:]\/\/(.*)$/m', '/**/$1', $value);
-        $value = preg_replace('/([^\-&])#.*[\r\n\v\f]/m', '$1', $value);
-        $value = preg_replace('/([^&\-])#.*\n/m', '$1 ', $value);
-        $value = preg_replace('/^#.*\n/m', ' ', $value);
+        $value = (string) preg_replace('/(<\w+)\/+(\w+=?)/m', '$1/$2', $value);
+        $value = (string) preg_replace('/[^\\\:]\/\/(.*)$/m', '/**/$1', $value);
+        $value = (string) preg_replace('/([^\-&])#.*[\r\n\v\f]/m', '$1', $value);
+        $value = (string) preg_replace('/([^&\-])#.*\n/m', '$1 ', $value);
+        $value = (string) preg_replace('/^#.*\n/m', ' ', $value);
 
         return $value;
     }
@@ -126,7 +126,7 @@ class Converter
         $value = str_replace('�', ' ', $value);
 
         //convert real linebreaks
-        return preg_replace('/(?:\n|\r|\v)/m', '  ', $value);
+        return (string) preg_replace('/(?:\n|\r|\v)/m', '  ', $value);
     }
 
     /**
@@ -153,14 +153,16 @@ class Converter
                 $char = preg_replace('/\W0/s', '', $char);
 
                 if (preg_match_all('/\d*[+-\/\* ]\d+/', $char, $matches)) {
-                    $match = preg_split('/(\W?\d+)/', implode('', $matches[0]), null, PREG_SPLIT_DELIM_CAPTURE);
+                    $match = preg_split('/(\W?\d+)/', implode('', $matches[0]), -1, PREG_SPLIT_DELIM_CAPTURE);
+                    $match = $match === false ? [] : $match;
 
-                    if (array_sum($match) >= 20 && array_sum($match) <= 127) {
-                        $converted .= chr(array_sum($match));
+                    $sum = array_sum($match);
+                    if ($sum >= 20 && $sum <= 127) {
+                        $converted .= chr((int) $sum);
                     }
 
                 } elseif (!empty($char) && $char >= 20 && $char <= 127) {
-                    $converted .= chr($char);
+                    $converted .= chr((int) $char);
                 }
             }
 
@@ -174,7 +176,7 @@ class Converter
 
             foreach (array_map('octdec', array_filter($charcode)) as $char) {
                 if (20 <= $char && $char <= 127) {
-                    $converted .= chr($char);
+                    $converted .= chr((int) $char);
                 }
             }
             $value .= "\n" . $converted;
@@ -187,7 +189,7 @@ class Converter
 
             foreach (array_map('hexdec', array_filter($charcode)) as $char) {
                 if (20 <= $char && $char <= 127) {
-                    $converted .= chr($char);
+                    $converted .= chr((int) $char);
                 }
             }
             $value .= "\n" . $converted;
@@ -276,7 +278,7 @@ class Converter
                 $converted = '';
                 foreach (str_split($match, 2) as $hex_index) {
                     if (preg_match('/[a-f\d]{2,3}/i', $hex_index)) {
-                        $converted .= chr(hexdec($hex_index));
+                        $converted .= chr((int) hexdec($hex_index));
                     }
                 }
                 $value = str_replace($match, $converted, $value);
@@ -321,7 +323,7 @@ class Converter
         $value   = preg_replace($pattern, '!', $value);
         $value   = preg_replace('/"\s+\d/', '"', $value);
         $value   = preg_replace('/(\W)div(\W)/ims', '$1 OR $2', $value);
-        $value   = preg_replace('/\/(?:\d+|null)/', null, $value);
+        $value   = preg_replace('/\/(?:\d+|null)/', '', $value);
 
         return $value;
     }
@@ -350,7 +352,7 @@ class Converter
         $value = urldecode(
             preg_replace(
                 '/(?:%E(?:2|3)%8(?:0|1)%(?:A|8|9)\w|%EF%BB%BF|%EF%BF%BD)|(?:&#(?:65|8)\d{3};?)/i',
-                null,
+                '',
                 urlencode($value)
             )
         );
@@ -362,13 +364,13 @@ class Converter
         $value = urldecode($value);
 
         $value = preg_replace('/(?:%ff1c)/', '<', $value);
-        $value = preg_replace('/(?:&[#x]*(200|820|200|820|zwn?j|lrm|rlm)\w?;?)/i', null, $value);
+        $value = preg_replace('/(?:&[#x]*(200|820|200|820|zwn?j|lrm|rlm)\w?;?)/i', '', $value);
         $value = preg_replace(
             '/(?:&#(?:65|8)\d{3};?)|' .
             '(?:&#(?:56|7)3\d{2};?)|' .
             '(?:&#x(?:fe|20)\w{2};?)|' .
             '(?:&#x(?:d[c-f])\w{2};?)/i',
-            null,
+            '',
             $value
         );
 
@@ -415,7 +417,7 @@ class Converter
         preg_match_all('/(?:^|[,&?])\s*([a-z0-9]{50,}=*)(?:\W|$)/im', $value, $matches);
 
         foreach ($matches[1] as $item) {
-            if (isset($item) && !preg_match('/[a-f0-9]{32}/i', $item)) {
+            if (!preg_match('/[a-f0-9]{32}/i', $item)) {
                 $base64_item = base64_decode($item);
                 $value = str_replace($item, $base64_item, $value);
             }
@@ -478,7 +480,7 @@ class Converter
 
         if (!empty($matches[0])) {
             foreach ($matches[0] as $match) {
-                $chr = chr(hexdec(substr($match, 2, 4)));
+                $chr = chr((int) hexdec(substr($match, 2, 4)));
                 $value = str_replace($match, $chr, $value);
             }
             $value .= "\n\u0001";
@@ -587,7 +589,7 @@ class Converter
         );
 
         // strip out concatenations
-        $converted = preg_replace($pattern, null, $compare);
+        $converted = preg_replace($pattern, '', $compare);
 
         //strip object traversal
         $converted = preg_replace('/\w(\.\w\()/', "$1", $converted);
@@ -598,7 +600,7 @@ class Converter
         //convert JS special numbers
         $converted = preg_replace(
             '/(?:\(*[.\d]e[+-]*[^a-z\W]+\)*)|(?:NaN|Infinity)\W/ims',
-            1,
+            '1',
             $converted
         );
 
@@ -629,15 +631,15 @@ class Converter
         $value = preg_replace('/^"([^"=\\!><~]+)"$/', '$1', $value);
 
         //OpenID login tokens
-        $value = preg_replace('/{[\w-]{8,9}\}(?:\{[\w=]{8}\}){2}/', null, $value);
+        $value = preg_replace('/{[\w-]{8,9}\}(?:\{[\w=]{8}\}){2}/', '', $value);
 
         //convert Content and \sdo\s to null
-        $value = preg_replace('/Content|\Wdo\s/', null, $value);
+        $value = preg_replace('/Content|\Wdo\s/', '', $value);
 
         //strip emoticons
         $value = preg_replace(
             '/(?:\s[:;]-[)\/PD]+)|(?:\s;[)PD]+)|(?:\s:[)PD]+)|-\.-|\^\^/m',
-            null,
+            '',
             $value
         );
 
@@ -691,12 +693,12 @@ class Converter
      * @static
      * @return string
      */
-    public static function runCentrifuge($value, Monitor $monitor = null)
+    public static function runCentrifuge($value, ?Monitor $monitor = null)
     {
         $threshold = 3.49;
         if (strlen($value) > 25) {
             //strip padding
-            $tmp_value = preg_replace('/\s{4}|==$/m', null, $value);
+            $tmp_value = preg_replace('/\s{4}|==$/m', '', $value);
             $tmp_value = preg_replace(
                 '/\s{4}|[\p{L}\d\+\-=,.%()]{8,}/m',
                 'aaa',
@@ -705,12 +707,12 @@ class Converter
 
             // Check for the attack char ratio
             $tmp_value = preg_replace('/([*.!?+-])\1{1,}/m', '$1', $tmp_value);
-            $tmp_value = preg_replace('/"[\p{L}\d\s]+"/m', null, $tmp_value);
+            $tmp_value = preg_replace('/"[\p{L}\d\s]+"/m', '', $tmp_value);
 
             $stripped_length = strlen(
                 preg_replace(
                     '/[\d\s\p{L}\.:,%&\/><\-)!|]+/m',
-                    null,
+                    '',
                     $tmp_value
                 )
             );
@@ -718,13 +720,15 @@ class Converter
                 preg_replace(
                     '/([\d\s\p{L}:,\.]{3,})+/m',
                     'aaa',
-                    preg_replace('/\s{2,}/m', null, $tmp_value)
+                    preg_replace('/\s{2,}/m', '', $tmp_value)
                 )
             );
 
             if ($stripped_length != 0 && $overall_length/$stripped_length <= $threshold) {
-                $monitor->centrifuge['ratio']     = $overall_length / $stripped_length;
-                $monitor->centrifuge['threshold'] =$threshold;
+                if ($monitor !== null) {
+                    $monitor->centrifuge['ratio']     = $overall_length / $stripped_length;
+                    $monitor->centrifuge['threshold'] = $threshold;
+                }
 
                 $value .= "\n$[!!!]";
             }
@@ -732,7 +736,7 @@ class Converter
 
         if (strlen($value) > 40) {
             // Replace all non-special chars
-            $converted =  preg_replace('/[\w\s\p{L},.:!]/', null, $value);
+            $converted =  preg_replace('/[\w\s\p{L},.:!]/', '', $value);
 
             // Split string into an array, unify and sort
             $array = str_split($converted);
@@ -760,7 +764,7 @@ class Converter
             $converted = preg_replace('/[+-]\s*\d+/', '+', $converted);
             $converted = preg_replace('/[()[\]{}]/', '(', $converted);
             $converted = preg_replace('/[!?:=]/', ':', $converted);
-            $converted = preg_replace('/[^:(+]/', null, stripslashes($converted));
+            $converted = preg_replace('/[^:(+]/', '', stripslashes($converted));
 
             // Sort again and implode
             $array = str_split($converted);
@@ -768,7 +772,9 @@ class Converter
             $converted = implode($array);
 
             if (preg_match('/(?:\({2,}\+{2,}:{2,})|(?:\({2,}\+{2,}:+)|(?:\({3,}\++:{2,})/', $converted)) {
-                $monitor->centrifuge['converted'] = $converted;
+                if ($monitor !== null) {
+                    $monitor->centrifuge['converted'] = $converted;
+                }
 
                 return $value . "\n" . $converted;
             }

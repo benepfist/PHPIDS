@@ -56,7 +56,7 @@ class Monitor
      *
      * Accepted values are xss, csrf, sqli, dt, id, lfi, rfe, spam, dos
      *
-     * @var array
+     * @var string[]|null
      */
     private $tags = null;
 
@@ -85,7 +85,7 @@ class Monitor
      * Using this array it is possible to define variables that must not be
      * scanned. Per default, utmz google analytics parameters are permitted.
      *
-     * @var array
+     * @var string[]
      */
     private $exceptions = array();
 
@@ -96,7 +96,7 @@ class Monitor
      * contain html and have to be prepared before hitting the rules to
      * avoid too many false alerts
      *
-     * @var array
+     * @var string[]
      */
     private $html = array();
 
@@ -106,7 +106,7 @@ class Monitor
      * Using this array it is possible to define variables that contain
      * JSON data - and should be treated as such
      *
-     * @var array
+     * @var string[]
      */
     private $json = array();
 
@@ -132,15 +132,22 @@ class Monitor
     private $tmpJsonString = '';
 
     /**
+     * Centrifuge data container
+     *
+     * @var array<string, mixed>
+     */
+    public $centrifuge = array();
+
+    /**
      * Constructor
      *
      * @throws \InvalidArgumentException When PHP version is less than what the library supports
      * @throws \Exception
      * @param  Init       $init instance of IDS_Init
-     * @param  array|null $tags list of tags to which filters should be applied
+     * @param  string[]|null $tags list of tags to which filters should be applied
      * @return Monitor
      */
-    public function __construct(Init $init, array $tags = null)
+    public function __construct(Init $init, ?array $tags = null)
     {
         $this->storage    = new Storage($init);
         $this->tags       = $tags;
@@ -163,7 +170,7 @@ class Monitor
     /**
      * Starts the scan mechanism
      *
-     * @param  array $request
+     * @param  array<string, mixed> $request
      * @return Report
      */
     public function run(array $request)
@@ -180,7 +187,7 @@ class Monitor
      * order to check for malicious appearing fragments
      *
      * @param string       $key   the former array key
-     * @param array|string $value the former array value
+     * @param array<string, mixed>|string $value the former array value
      * @param Report       $report
      * @return Report
      */
@@ -219,7 +226,7 @@ class Monitor
         // check if this field is part of the exceptions
         foreach ($this->exceptions as $exception) {
             $matches = array();
-            if (($exception === $key) || preg_match('((/.*/[^eE]*)$)', $exception, $matches) && isset($matches[1]) && preg_match($matches[1], $key)) {
+            if (($exception === $key) || (preg_match('((/.*/[^eE]*)$)', $exception, $matches) && preg_match($matches[1], $key))) {
                 return array();
             }
         }
@@ -282,7 +289,7 @@ class Monitor
      * @since  0.5
      * @throws \Exception
      *
-     * @return array tuple [key,value]
+     * @return array{0:mixed,1:mixed} tuple [key,value]
      */
     private function purifyValues($key, $value)
     {
@@ -294,7 +301,7 @@ class Monitor
                 throw new \Exception($this->HTMLPurifierCache . ' must be writeable');
             }
 
-            /** @var $config \HTMLPurifier_Config */
+            /** @var \HTMLPurifier_Config $config */
             $config = \HTMLPurifier_Config::createDefault();
             $config->set('Attr.EnableID', true);
             $config->set('Cache.SerializerPath', $this->HTMLPurifierCache);
@@ -334,8 +341,8 @@ class Monitor
         /*
          * Remove control chars before pre-check
          */
-        $tmpValue = preg_replace('/\p{C}/', null, $value);
-        $tmpKey = preg_replace('/\p{C}/', null, $key);
+        $tmpValue = preg_replace('/\p{C}/', '', $value);
+        $tmpKey = preg_replace('/\p{C}/', '', $key);
 
         $preCheck = '/<(script|iframe|applet|object)\W/i';
         return !(preg_match($preCheck, $tmpKey) || preg_match($preCheck, $tmpValue));
@@ -350,7 +357,7 @@ class Monitor
      * @param string $plain    the string without html
      * @since 0.5
      *
-     * @return string the difference between the strings
+     * @return string|null the difference between the strings
      */
     private function diff($original, $purified, $plain)
     {
@@ -358,10 +365,10 @@ class Monitor
          * deal with over-sensitive alt-attribute addition of the purifier
          * and other common html formatting problems
          */
-        $purified = preg_replace('/\s+alt="[^"]*"/m', null, $purified);
-        $purified = preg_replace('/=?\s*"\s*"/m', null, $purified);
-        $original = preg_replace('/\s+alt="[^"]*"/m', null, $original);
-        $original = preg_replace('/=?\s*"\s*"/m', null, $original);
+        $purified = preg_replace('/\s+alt="[^"]*"/m', '', $purified);
+        $purified = preg_replace('/=?\s*"\s*"/m', '', $purified);
+        $original = preg_replace('/\s+alt="[^"]*"/m', '', $original);
+        $original = preg_replace('/=?\s*"\s*"/m', '', $original);
         $original = preg_replace('/style\s*=\s*([^"])/m', 'style = "$1', $original);
 
         # deal with oversensitive CSS normalization
@@ -388,11 +395,14 @@ class Monitor
         $array1 = preg_split('/(?<!^)(?!$)/u', html_entity_decode(urldecode($original)));
         $array2 = preg_split('/(?<!^)(?!$)/u', $purified);
 
-        // create an array containing the single character differences
-        $differences = array_diff_assoc($array1, $array2);
-
+        if ($array1 === false || $array2 === false) {
+            $differences = '';
+        } else {
+            // create an array containing the single character differences
+            $differences = implode('', array_diff_assoc($array1, $array2));
+        }
         // return the diff - ready to hit the converter and the rules
-        $differences = trim(implode('', $differences));
+        $differences = trim($differences);
         $diff = $length <= 10 ? $differences : mb_substr($differences, 0, strlen($original));
 
         // clean up spaces between tag delimiters
@@ -413,9 +423,9 @@ class Monitor
      * @param string $value
      * @since  0.5.3
      *
-     * @return array tuple [key,value]
-     */
-    private function jsonDecodeValues($key, $value)
+     * @return array{0:mixed,1:mixed} tuple [key,value]
+    */
+   private function jsonDecodeValues($key, $value)
     {
         $decodedKey   = json_decode($key);
         $decodedValue = json_decode($value);
@@ -452,7 +462,12 @@ class Monitor
         if (is_string($key) && is_string($value)) {
             $this->tmpJsonString .=  $key . " " . $value . "\n";
         } else {
-            $this->jsonDecodeValues(json_encode($key), json_encode($value));
+            $encodedKey = json_encode($key);
+            $encodedValue = json_encode($value);
+            $this->jsonDecodeValues(
+                $encodedKey === false ? '' : $encodedKey,
+                $encodedValue === false ? '' : $encodedValue
+            );
         }
     }
 
@@ -471,9 +486,9 @@ class Monitor
     /**
      * Returns exception array
      *
-     * @return array
-     */
-    public function getExceptions()
+     * @return string[]
+    */
+   public function getExceptions()
     {
         return $this->exceptions;
     }
@@ -509,9 +524,9 @@ class Monitor
      *
      * @since 0.5
      *
-     * @return array the fields that contain allowed html
-     */
-    public function getHtml()
+     * @return string[] the fields that contain allowed html
+    */
+   public function getHtml()
     {
         return $this->html;
     }
@@ -547,9 +562,9 @@ class Monitor
      *
      * @since 0.5.3
      *
-     * @return array the fields that contain json
-     */
-    public function getJson()
+     * @return string[] the fields that contain json
+    */
+   public function getJson()
     {
         return $this->json;
     }
@@ -557,7 +572,7 @@ class Monitor
     /**
      * Returns storage container
      *
-     * @return array
+     * @return Storage
      */
     public function getStorage()
     {

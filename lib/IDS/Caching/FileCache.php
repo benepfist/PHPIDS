@@ -51,17 +51,11 @@ use IDS\Init;
  */
 class FileCache implements CacheInterface
 {
-    /**
-     * Caching type
-     *
-     * @var string
-     */
-    private $type;
 
     /**
      * Cache configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     private $config;
 
@@ -75,23 +69,23 @@ class FileCache implements CacheInterface
     /**
      * Holds an instance of this class
      *
-     * @var object
+     * @var self|null
      */
     private static $cachingInstance;
 
     /**
      * Constructor
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      * @throws \Exception
      *
      * @return void
      */
-    public function __construct($type, Init $init)
+    public function __construct(Init $init)
     {
-        $this->type   = $type;
-        $this->config = $init->config['Caching'];
+        /** @var array<string, mixed> $config */
+        $config = $init->config['Caching'];
+        $this->config = $config;
         $this->path   = $init->getBasePath() . $this->config['path'];
 
         if (file_exists($this->path) && !is_writable($this->path)) {
@@ -106,15 +100,14 @@ class FileCache implements CacheInterface
     /**
      * Returns an instance of this class
      *
-     * @param string $type caching type
-     * @param object $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      *
      * @return object $this
      */
-    public static function getInstance($type, $init)
+    public static function getInstance($init)
     {
         if (!self::$cachingInstance) {
-            self::$cachingInstance = new FileCache($type, $init);
+            self::$cachingInstance = new FileCache($init);
         }
 
         return self::$cachingInstance;
@@ -123,14 +116,15 @@ class FileCache implements CacheInterface
     /**
      * Writes cache data into the file
      *
-     * @param array $data the cache data
+     * @param array<int|string, mixed> $data the cache data
      *
-     * @throws Exception if cache file couldn't be created
+     * @throws \Exception if cache file couldn't be created
      * @return object    $this
      */
     public function setCache(array $data): self
     {
-        if (!is_writable(preg_replace('/[\/][^\/]+\.[^\/]++$/', null, $this->path))) {
+        $directory = dirname($this->path);
+        if (!is_writable($directory)) {
             throw new \Exception(
                 'Temp directory ' .
                 htmlspecialchars($this->path, ENT_QUOTES, 'UTF-8') .
@@ -172,7 +166,12 @@ class FileCache implements CacheInterface
             return false;
         }
 
-        $data = unserialize(file_get_contents($this->path));
+        $content = file_get_contents($this->path);
+        if ($content === false) {
+            return false;
+        }
+
+        $data = unserialize($content);
 
         return $data;
     }
@@ -185,6 +184,8 @@ class FileCache implements CacheInterface
      */
     private function isValidFile($file)
     {
-        return file_exists($file) && time() - filectime($file) <= $this->config['expiration_time'];
+        /** @var int $ttl */
+        $ttl = $this->config['expiration_time'];
+        return file_exists($file) && time() - filectime($file) <= $ttl;
     }
 }

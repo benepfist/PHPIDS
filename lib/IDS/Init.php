@@ -53,14 +53,14 @@ class Init
     /**
      * Holds config settings
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public array $config = [];
 
     /**
      * Instance of this class depending on the supplied config file
      *
-     * @var Init[]|array
+     * @var array<string, self>
      * @static
      */
     private static array $instances = [];
@@ -70,7 +70,7 @@ class Init
      *
      * Includes needed classes and parses the configuration file
      *
-     * @param array $config
+     * @param array<string, mixed> $config
      *
      * @return \IDS\Init $this
      */
@@ -97,7 +97,11 @@ class Init
             if (!file_exists($configPath) || !is_readable($configPath)) {
                 throw new \InvalidArgumentException("Invalid config path '$configPath'");
             }
-            self::$instances[$configPath] = new static(parse_ini_file($configPath, true));
+            $parsed = parse_ini_file($configPath, true);
+            if ($parsed === false) {
+                throw new \RuntimeException("Unable to parse config file '$configPath'");
+            }
+            self::$instances[$configPath] = new self($parsed);
         }
 
         return self::$instances[$configPath];
@@ -120,7 +124,7 @@ class Init
     /**
      * Merges new settings into the exsiting ones or overwrites them
      *
-     * @param array   $config    the config array
+     * @param array<string, mixed>   $config    the config array
      * @param boolean $overwrite config overwrite flag
      *
      * @return void
@@ -141,22 +145,20 @@ class Init
      * an array in both, the values will be appended. If it is a scalar in both,
      * the value will be replaced.
      *
-     * @param  array $current   The legacy hash
-     * @param  array $successor The hash which values count more when in doubt
-     * @return array Merged hash
+     * @param  array<string, mixed> $current   The legacy hash
+     * @param  array<string, mixed> $successor The hash which values count more when in doubt
+     * @return array<string, mixed> Merged hash
      */
     protected function mergeConfig(array $current, array $successor): array
     {
-        if (is_array($current) and is_array($successor)) {
-            foreach ($successor as $key => $value) {
-                if (isset($current[$key])
-                    and is_array($value)
-                    and is_array($current[$key])) {
+        foreach ($successor as $key => $value) {
+            if (isset($current[$key])
+                && is_array($value)
+                && is_array($current[$key])) {
 
-                    $current[$key] = $this->mergeConfig($current[$key], $value);
-                } else {
-                    $current[$key] = $successor[$key];
-                }
+                $current[$key] = $this->mergeConfig($current[$key], $value);
+            } else {
+                $current[$key] = $successor[$key];
             }
         }
 
@@ -166,7 +168,7 @@ class Init
     /**
      * Returns the config array
      *
-     * @return array the config array
+     * @return array<string, mixed> the config array
      */
     public function getConfig(): array
     {

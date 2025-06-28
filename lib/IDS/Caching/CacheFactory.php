@@ -53,18 +53,19 @@ class CacheFactory
     /**
      * Factory method
      *
-     * @param object $init the IDS_Init object
+     * @param \IDS\Init $init the IDS_Init object
      * @param string $type the caching type
      *
-     * @return object the caching facility
+     * @return \IDS\Caching\CacheInterface|false the caching facility
      */
-    public static function factory($init, $type)
+    public static function factory($init, $type): CacheInterface|false
     {
         $object  = false;
+        $config  = (array) $init->config['Caching'];
         $wrapper = preg_replace(
             '/\W+/m',
-            null,
-            ucfirst($init->config['Caching']['caching'])
+            '',
+            ucfirst((string) $config['caching'])
         );
         $class   = '\\IDS\\Caching\\' . $wrapper . 'Cache';
         $path    = dirname(__FILE__) . DIRECTORY_SEPARATOR . $wrapper . 'Cache.php';
@@ -73,11 +74,12 @@ class CacheFactory
             include_once $path;
 
             if (class_exists($class)) {
-                $object = call_user_func(
-                    array('' . $class, 'getInstance'),
-                    $type,
-                    $init
-                );
+                $method = new \ReflectionMethod($class, 'getInstance');
+                $args = $method->getNumberOfParameters() === 2
+                    ? array($type, $init)
+                    : array($init);
+
+                $object = $method->invokeArgs(null, $args);
             }
         }
 

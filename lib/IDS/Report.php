@@ -50,6 +50,9 @@ namespace IDS;
  * @license   http://www.gnu.org/licenses/lgpl.html LGPL
  * @link      http://php-ids.org/
  */
+/**
+ * @implements \IteratorAggregate<string, Event>
+ */
 class Report implements \Countable, \IteratorAggregate
 {
     /**
@@ -85,14 +88,14 @@ class Report implements \Countable, \IteratorAggregate
      * This variable - initiated as an empty array - carries all information
      * about the centrifuge data if available
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $centrifuge = [];
 
     /**
      * Constructor
      *
-     * @param array $events the events the report should include
+     * @param Event[]|null $events the events the report should include
      *
      * @return Report
      */
@@ -244,7 +247,7 @@ class Report implements \Countable, \IteratorAggregate
      * This method returns the centrifuge property or null if not
      * filled with data
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getCentrifuge(): array
     {
@@ -254,7 +257,7 @@ class Report implements \Countable, \IteratorAggregate
     /**
      * This method sets the centrifuge property
      *
-     * @param array $centrifuge the centrifuge data
+     * @param array<string, mixed> $centrifuge the centrifuge data
      *
      * @throws \InvalidArgumentException if argument is illegal
      * @return void

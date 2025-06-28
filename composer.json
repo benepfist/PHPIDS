@@ -17,5 +17,8 @@
             "IDS\\Tests": "tests/",
             "IDS": "lib/"
         }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.11"
     }
 }
