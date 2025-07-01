@@ -137,7 +137,7 @@ class Report implements \Countable, \IteratorAggregate
             throw new \InvalidArgumentException('Invalid argument type given');
         }
 
-        return $this->hasEvent($name) ? $this->events[$name] : null;
+        return $this->hasEvent((string) $name) ? $this->events[(string) $name] : null;
     }
 
     /**
@@ -194,7 +194,7 @@ class Report implements \Countable, \IteratorAggregate
             throw new \InvalidArgumentException('Invalid argument given');
         }
 
-        return isset($this->events[$name]);
+        return isset($this->events[(string) $name]);
     }
 
     /**

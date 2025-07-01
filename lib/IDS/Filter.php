@@ -118,13 +118,13 @@ class Filter
      */
     public function match($input)
     {
-        if (!is_string($input)) {
+        if (!is_string($input) && !is_null($input)) {
             throw new \InvalidArgumentException(
-                'Invalid argument. Expected a string, received ' . gettype($input)
+                'Invalid argument. Expected a string or null, received ' . gettype($input)
             );
         }
 
-        return (bool) preg_match('/' . $this->getRule() . '/ms', strtolower($input));
+        return (bool) preg_match('/' . $this->getRule() . '/ms', strtolower((string) $input));
     }
 
     /**

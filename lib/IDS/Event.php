@@ -112,14 +112,15 @@ class Event implements \Countable, \IteratorAggregate
             );
         }
 
-        if (!is_scalar($value)) {
+        // Allow null values, will be cast to string later
+        if (!is_scalar($value) && !is_null($value)) {
             throw new \InvalidArgumentException(
-                'Expected $value to be a scalar,' . gettype($value) . ' given'
+                'Expected $value to be a scalar or null,' . gettype($value) . ' given'
             );
         }
 
-        $this->name  = $name;
-        $this->value = $value;
+        $this->name  = (string) $name;
+        $this->value = (string) $value;
 
         foreach ($filters as $filter) {
             if (!$filter instanceof Filter) {

@@ -197,9 +197,9 @@ class Monitor
             foreach ($value as $subKey => $subValue) {
                 $this->iterate("$key.$subKey", $subValue, $report);
             }
-        } elseif (is_string($value)) {
+        } elseif (is_string($value) || is_null($value)) {
             if ($filter = $this->detect($key, $value)) {
-                $report->addEvent(new Event($key, $value, $filter));
+                $report->addEvent(new Event((string) $key, (string) $value, $filter));
             }
         }
         return $report;
@@ -213,36 +213,36 @@ class Monitor
      *
      * @return Filter[] array of filter(s) that matched the value
      */
-    private function detect($key, $value)
+    private function detect($key, $value): array
     {
         // define the pre-filter
         $preFilter = '([^\w\s/@!?\.]+|(?:\./)|(?:@@\w+)|(?:\+ADw)|(?:union\s+select))i';
 
         // to increase performance, only start detection if value isn't alphanumeric
-        if ((!$this->scanKeys || !$key || !preg_match($preFilter, $key)) && (!$value || !preg_match($preFilter, $value))) {
+        if ((!$this->scanKeys || !$key || !preg_match($preFilter, (string) $key)) && (!$value || !preg_match($preFilter, (string) $value))) {
             return array();
         }
 
         // check if this field is part of the exceptions
         foreach ($this->exceptions as $exception) {
             $matches = array();
-            if (($exception === $key) || (preg_match('((/.*/[^eE]*)$)', $exception, $matches) && preg_match($matches[1], $key))) {
+            if (($exception === $key) || (preg_match('((/.*/[^eE]*)$)', $exception, $matches) && preg_match($matches[1], (string) $key))) {
                 return array();
             }
         }
 
         // check for magic quotes and remove them if necessary
         if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
-            $value = preg_replace('(\\\(["\'/]))im', '$1', $value);
+            $value = preg_replace('(\\\(["\'/]))im', '$1', (string) $value);
         }
 
         // if html monitoring is enabled for this field - then do it!
-        if (is_array($this->html) && in_array($key, $this->html, true)) {
+        if (in_array($key, $this->html, true)) {
             list($key, $value) = $this->purifyValues($key, $value);
         }
 
         // check if json monitoring is enabled for this field
-        if (is_array($this->json) && in_array($key, $this->json, true)) {
+        if (in_array($key, $this->json, true)) {
             list($key, $value) = $this->jsonDecodeValues($key, $value);
         }
 
@@ -269,7 +269,7 @@ class Monitor
         $filterSet = array_filter(
             $filterSet,
             function (Filter $filter) use ($key, $value, $scanKeys) {
-                return $filter->match($value) || $scanKeys && $filter->match($key);
+                return $filter->match((string) $value) || $scanKeys && $filter->match((string) $key);
             }
         );
 
@@ -291,12 +291,12 @@ class Monitor
      *
      * @return array{0:mixed,1:mixed} tuple [key,value]
      */
-    private function purifyValues($key, $value)
+    private function purifyValues($key, $value): array
     {
         /*
          * Perform a pre-check if string is valid for purification
          */
-        if ($this->purifierPreCheck($key, $value)) {
+        if ($this->purifierPreCheck((string) $key, (string) $value)) {
             if (!is_writeable($this->HTMLPurifierCache)) {
                 throw new \Exception($this->HTMLPurifierCache . ' must be writeable');
             }
@@ -308,17 +308,17 @@ class Monitor
             $config->set('Output.Newline', "\n");
             $this->htmlPurifier = new \HTMLPurifier($config);
 
-            $value = preg_replace('([\x0b-\x0c])', ' ', $value);
-            $key = preg_replace('([\x0b-\x0c])', ' ', $key);
+            $value = preg_replace('([\x0b-\x0c])', ' ', (string) $value);
+            $key = preg_replace('([\x0b-\x0c])', ' ', (string) $key);
 
-            $purifiedValue = $this->htmlPurifier->purify($value);
-            $purifiedKey   = $this->htmlPurifier->purify($key);
+            $purifiedValue = $this->htmlPurifier->purify((string) $value);
+            $purifiedKey   = $this->htmlPurifier->purify((string) $key);
 
-            $plainValue = strip_tags($value);
-            $plainKey   = strip_tags($key);
+            $plainValue = strip_tags((string) $value);
+            $plainKey   = strip_tags((string) $key);
 
-            $value = $value != $purifiedValue || $plainValue ? $this->diff($value, $purifiedValue, $plainValue) : null;
-            $key = $key != $purifiedKey ? $this->diff($key, $purifiedKey, $plainKey) : null;
+            $value = $value != $purifiedValue || $plainValue ? $this->diff((string) $value, $purifiedValue, $plainValue) : null;
+            $key = $key != $purifiedKey ? $this->diff((string) $key, (string) $purifiedKey, $plainKey) : null;
         }
         return array($key, $value);
     }
@@ -336,16 +336,16 @@ class Monitor
      *
      * @return boolean
      */
-    private function purifierPreCheck($key = '', $value = '')
+    private function purifierPreCheck($key = '', $value = ''): bool
     {
         /*
          * Remove control chars before pre-check
          */
-        $tmpValue = preg_replace('/\p{C}/', '', $value);
-        $tmpKey = preg_replace('/\p{C}/', '', $key);
+        $tmpValue = preg_replace('/\p{C}/', '', (string) $value);
+        $tmpKey = preg_replace('/\p{C}/', '', (string) $key);
 
         $preCheck = '/<(script|iframe|applet|object)\W/i';
-        return !(preg_match($preCheck, $tmpKey) || preg_match($preCheck, $tmpValue));
+        return !(preg_match($preCheck, (string) $tmpKey) || preg_match($preCheck, (string) $tmpValue));
     }
 
     /**
@@ -359,26 +359,26 @@ class Monitor
      *
      * @return string|null the difference between the strings
      */
-    private function diff($original, $purified, $plain)
+    private function diff($original, $purified, $plain): ?string
     {
         /*
          * deal with over-sensitive alt-attribute addition of the purifier
          * and other common html formatting problems
          */
-        $purified = preg_replace('/\s+alt="[^"]*"/m', '', $purified);
-        $purified = preg_replace('/=?\s*"\s*"/m', '', $purified);
-        $original = preg_replace('/\s+alt="[^"]*"/m', '', $original);
-        $original = preg_replace('/=?\s*"\s*"/m', '', $original);
-        $original = preg_replace('/style\s*=\s*([^"])/m', 'style = "$1', $original);
+        $purified = preg_replace('/\s+alt="[^"]*"/m', '', (string) $purified);
+        $purified = preg_replace('/=?\s*"\s*"/m', '', (string) $purified);
+        $original = preg_replace('/\s+alt="[^"]*"/m', '', (string) $original);
+        $original = preg_replace('/=?\s*"\s*"/m', '', (string) $original);
+        $original = preg_replace('/style\s*=\s*([^"])/m', 'style = "$1', (string) $original);
 
         # deal with oversensitive CSS normalization
-        $original = preg_replace('/(?:([\w\-]+:)+\s*([^;]+;\s*))/m', '$1$2', $original);
+        $original = preg_replace('/(?:([\w\-]+:)+\s*([^;]+;\s*))/m', '$1$2', (string) $original);
 
         # strip whitespace between tags
-        $original = trim(preg_replace('/>\s*</m', '><', $original));
-        $purified = trim(preg_replace('/>\s*</m', '><', $purified));
+        $original = trim((string) preg_replace('/>\s*</m', '><', (string) $original));
+        $purified = trim((string) preg_replace('/>\s*</m', '><', (string) $purified));
 
-        $original = preg_replace('/(=\s*(["\'`])[^>"\'`]*>[^>"\'`]*["\'`])/m', 'alt$1', $original);
+        $original = preg_replace('/(=\s*(["\'`])[^>"\'`]*>[^>"\'`]*["\'`])/m', 'alt$1', (string) $original);
 
         // no purified html is left
         if (!$purified) {
@@ -386,14 +386,14 @@ class Monitor
         }
 
         // calculate the diff length
-        $length = mb_strlen($original) - mb_strlen($purified);
+        $length = mb_strlen((string) $original) - mb_strlen((string) $purified);
 
         /*
          * Calculate the difference between the original html input
          * and the purified string.
          */
-        $array1 = preg_split('/(?<!^)(?!$)/u', html_entity_decode(urldecode($original)));
-        $array2 = preg_split('/(?<!^)(?!$)/u', $purified);
+        $array1 = preg_split('/(?<!^)(?!$)/u', html_entity_decode(urldecode((string) $original)));
+        $array2 = preg_split('/(?<!^)(?!$)/u', (string) $purified);
 
         if ($array1 === false || $array2 === false) {
             $differences = '';
@@ -403,15 +403,15 @@ class Monitor
         }
         // return the diff - ready to hit the converter and the rules
         $differences = trim($differences);
-        $diff = $length <= 10 ? $differences : mb_substr($differences, 0, strlen($original));
+        $diff = $length <= 10 ? $differences : mb_substr($differences, 0, strlen((string) $original));
 
         // clean up spaces between tag delimiters
-        $diff = preg_replace('/>\s*</m', '><', $diff);
+        $diff = preg_replace('/>\s*</m', '><', (string) $diff);
 
         // correct over-sensitively stripped bad html elements
-        $diff = preg_replace('/[^<](iframe|script|embed|object|applet|base|img|style)/m', '<$1', $diff );
+        $diff = preg_replace('/[^<](iframe|script|embed|object|applet|base|img|style)/m', '<$1', (string) $diff );
 
-        return mb_strlen($diff) >= 4 ? $diff . $plain : null;
+        return mb_strlen((string) $diff) >= 4 ? $diff . $plain : null;
     }
 
     /**
@@ -425,10 +425,10 @@ class Monitor
      *
      * @return array{0:mixed,1:mixed} tuple [key,value]
     */
-   private function jsonDecodeValues($key, $value)
+   private function jsonDecodeValues($key, $value): array
     {
-        $decodedKey   = json_decode($key);
-        $decodedValue = json_decode($value);
+        $decodedKey   = json_decode((string) $key);
+        $decodedValue = json_decode((string) $value);
 
         if ($decodedValue && is_array($decodedValue) || is_object($decodedValue)) {
             array_walk_recursive($decodedValue, array($this, 'jsonConcatContents'));
