@@ -232,7 +232,7 @@ class Monitor
         }
 
         // check for magic quotes and remove them if necessary
-        if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
+        if (!function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc()) {
             $value = preg_replace('(\\\(["\'/]))im', '$1', $value);
         }
 
@@ -427,17 +427,17 @@ class Monitor
     */
    private function jsonDecodeValues($key, $value)
     {
-        $decodedKey   = json_decode($key);
-        $decodedValue = json_decode($value);
+        $decodedKey   = json_decode($key, true);
+        $decodedValue = json_decode($value, true);
 
-        if ($decodedValue && is_array($decodedValue) || is_object($decodedValue)) {
+        if ($decodedValue && is_array($decodedValue)) {
             array_walk_recursive($decodedValue, array($this, 'jsonConcatContents'));
             $value = $this->tmpJsonString;
         } else {
             $this->tmpJsonString .=  " " . $decodedValue . "\n";
         }
 
-        if ($decodedKey && is_array($decodedKey) || is_object($decodedKey)) {
+        if ($decodedKey && is_array($decodedKey)) {
             array_walk_recursive($decodedKey, array($this, 'jsonConcatContents'));
             $key = $this->tmpJsonString;
         } else {
