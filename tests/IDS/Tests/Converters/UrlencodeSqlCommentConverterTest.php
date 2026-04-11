@@ -23,8 +23,7 @@ class UrlencodeSqlCommentConverterTest extends TestCase
     public static function payloadProvider(): array
     {
         return [
-            ['SELECT * FROM table %23 SQL comment %0a AND 1=1', "SELECT * FROM table %23 SQL comment %0a AND 1=1
-SELECT * FROM table   AND 1=1"],
+            ['SELECT * FROM table %23 SQL comment %0a AND 1=1', "SELECT * FROM table %23 SQL comment %0a AND 1=1\nSELECT * FROM table   AND 1=1"],
             ['Normal payload', 'Normal payload']
         ];
     }
