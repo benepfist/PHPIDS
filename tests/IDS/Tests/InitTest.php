@@ -39,7 +39,7 @@ class InitTest extends \PHPUnit\Framework\TestCase
 
     public function testInitConfig()
     {
-        $keys = array('General', 'Caching');
+        $keys = ['General', 'Caching'];
         $this->assertEquals($keys, array_keys($this->init->config));
     }
 
@@ -51,23 +51,23 @@ class InitTest extends \PHPUnit\Framework\TestCase
 
     public function testInitSetConfigOverwrite()
     {
-        $this->init->setConfig(array('General' => array('filter_type' => 'json')), true);
+        $this->init->setConfig(['General' => ['filter_type' => 'json']], true);
         $this->assertEquals($this->init->config['General']['filter_type'], 'json');
 
         $this->init->setConfig(
-            array('General' => array('exceptions' => array('foo'))),
+            ['General' => ['exceptions' => ['foo']]],
             true
         );
         $this->assertSame(
-            array('foo', 'GET.__utmc'),
+            ['foo', 'GET.__utmc'],
             $this->init->config['General']['exceptions']
         );
     }
 
     public function testInitSetConfigNoOverwrite()
     {
-        $this->init->setConfig(array('General' => array('filter_type' => 'xml')), true);
-        $this->init->setConfig(array('General' => array('filter_type' => 'json')));
+        $this->init->setConfig(['General' => ['filter_type' => 'xml']], true);
+        $this->init->setConfig(['General' => ['filter_type' => 'json']]);
         $this->assertEquals($this->init->config['General']['filter_type'], 'xml');
     }
 

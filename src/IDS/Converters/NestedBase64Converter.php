@@ -8,7 +8,7 @@ class NestedBase64Converter implements ConverterInterface
 {
     public function convert(string $value): string
     {
-        $matches = array();
+        $matches = [];
         preg_match_all('/(?:^|[,&?])\s*([a-z0-9]{50,}=*)(?:\W|$)/im', $value, $matches);
 
         foreach ($matches[1] as $item) {

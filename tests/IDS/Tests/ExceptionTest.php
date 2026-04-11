@@ -37,20 +37,11 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     protected $init;
 
     protected function setUp(): void {
-        $this->report = new Report(array(
-            new Event("key_a", 'val_b',
-                array(
-                    new Filter(1, '^test_a1$', 'desc_a1', array('tag_a1', 'tag_a2'), 1),
-                    new Filter(1, '^test_a2$', 'desc_a2', array('tag_a2', 'tag_a3'), 2)
-                )
-            ),
-            new Event('key_b', 'val_b',
-                array(
-                    new Filter(1, '^test_b1$', 'desc_b1', array('tag_b1', 'tag_b2'), 3),
-                    new Filter(1, '^test_b2$', 'desc_b2', array('tag_b2', 'tag_b3'), 4),
-                )
-            )
-        ));
+        $this->report = new Report([new Event("key_a", 'val_b',
+            [new Filter(1, '^test_a1$', 'desc_a1', ['tag_a1', 'tag_a2'], 1), new Filter(1, '^test_a2$', 'desc_a2', ['tag_a2', 'tag_a3'], 2)]
+        ), new Event('key_b', 'val_b',
+            [new Filter(1, '^test_b1$', 'desc_b1', ['tag_b1', 'tag_b2'], 3), new Filter(1, '^test_b2$', 'desc_b2', ['tag_b2', 'tag_b3'], 4)]
+        )]);
 
         $config = parse_ini_file(IDS_CONFIG, true);
         $this->init = new Init($config === false ? [] : $config);
@@ -59,41 +50,35 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     public function testEventConstructorExceptions1()
     {
         $this->expectException('InvalidArgumentException');
-        new Event(array(1,2), 'val_b',
-                array(
-                    new Filter(1, '^test_a1$', 'desc_a1', array('tag_a1', 'tag_a2'), 1),
-                    new Filter(1, '^test_a2$', 'desc_a2', array('tag_a2', 'tag_a3'), 2)
-                )
+        new Event([1, 2], 'val_b',
+                [new Filter(1, '^test_a1$', 'desc_a1', ['tag_a1', 'tag_a2'], 1), new Filter(1, '^test_a2$', 'desc_a2', ['tag_a2', 'tag_a3'], 2)]
         );
     }
 
     public function testEventConstructorExceptions2()
     {
         $this->expectException('InvalidArgumentException');
-        new Event("key_a", array(1,2),
-                array(
-                    new Filter(1, '^test_a1$', 'desc_a1', array('tag_a1', 'tag_a2'), 1),
-                    new Filter(1, '^test_a2$', 'desc_a2', array('tag_a2', 'tag_a3'), 2)
-                )
+        new Event("key_a", [1, 2],
+                [new Filter(1, '^test_a1$', 'desc_a1', ['tag_a1', 'tag_a2'], 1), new Filter(1, '^test_a2$', 'desc_a2', ['tag_a2', 'tag_a3'], 2)]
         );
     }
 
     public function testEventConstructorExceptions3()
     {
         $this->expectException('InvalidArgumentException');
-        new Event("key_a", 'val_b', array(1,2));
+        new Event("key_a", 'val_b', [1, 2]);
     }
 
     public function testGetEventException()
     {
         $this->expectException('InvalidArgumentException');
-        $this->report->getEvent(array(1,2,3));
+        $this->report->getEvent([1, 2, 3]);
     }
 
     public function testHasEventException()
     {
         $this->expectException('InvalidArgumentException');
-        $this->report->hasEvent(array(1,2,3));
+        $this->report->hasEvent([1, 2, 3]);
     }
 
     public function testInitConfigWrongPathException()

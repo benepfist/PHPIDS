@@ -186,7 +186,7 @@ class DatabaseCache implements CacheInterface
                 $this->config['table'] .
                 '` where type=?'
             );
-            $result->execute(array($this->type));
+            $result->execute([$this->type]);
 
             foreach ($result as $row) {
                 /** @var string $data */

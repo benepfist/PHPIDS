@@ -36,18 +36,18 @@ class FilterTest extends \PHPUnit\Framework\TestCase
 
     public function testObjectConstruction()
     {
-        $filter = new Filter(1, '^test$', 'My description', array('foo', 'bar'), 12);
+        $filter = new Filter(1, '^test$', 'My description', ['foo', 'bar'], 12);
 
         $this->assertTrue($filter->match('test'));
         $this->assertEquals("My description", $filter->getDescription(), "Should return description");
-        $this->assertEquals(array("foo", "bar"), $filter->getTags(), "Should return array/list of tags");
+        $this->assertEquals(["foo", "bar"], $filter->getTags(), "Should return array/list of tags");
         $this->assertEquals('^test$', $filter->getRule());
         $this->assertEquals(12, $filter->getImpact());
     }
 
     public function testModificator()
     {
-        $filter = new Filter(1, '^te.st$', 'My description', array('tag1', 'tag2'), 1);
+        $filter = new Filter(1, '^te.st$', 'My description', ['tag1', 'tag2'], 1);
 
         // Default must be
         // ... case-insensitive
@@ -60,20 +60,20 @@ class FilterTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidArgumentOnMatch () {
         $this->expectException('InvalidArgumentException');
-        $filter = new Filter(1, '^test$', 'My description', array('foo', 'bar'), 10);
+        $filter = new Filter(1, '^test$', 'My description', ['foo', 'bar'], 10);
         $filter->match(1);
     }
 
     public function testInvalidArgumentInFilterInstanciation1 () {
         $this->markTestSkipped('The values are not validated properly on instanciation');
         $this->expectException('InvalidArgumentException');
-        new Filter(1, '^test$', 'my desc', array('foo'), 'test');
+        new Filter(1, '^test$', 'my desc', ['foo'], 'test');
     }
 
     public function testInvalidArgumentInFilterInstanciation2 () {
         $this->markTestSkipped('The values are not validated properly on instanciation');
         $this->expectException('InvalidArgumentException');
-        new Filter(1, 1, 'my desc', array("foo"), 'bla');
+        new Filter(1, 1, 'my desc', ["foo"], 'bla');
     }
 
     public function testFilterSetFilterSet()
@@ -81,7 +81,7 @@ class FilterTest extends \PHPUnit\Framework\TestCase
         $this->init->config['General']['filter_type'] = IDS_FILTER_TYPE;
         $this->init->config['General']['filter_path'] = IDS_FILTER_SET;
         $storage = new Storage($this->init);
-        $filter = array(new Filter(1, 'test', 'test2', array(), 1));
+        $filter = [new Filter(1, 'test', 'test2', [], 1)];
         $this->assertTrue($storage->setFilterSet($filter) instanceof Storage);
     }
 }

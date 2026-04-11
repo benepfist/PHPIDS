@@ -9,7 +9,7 @@ class WhiteSpaceConverter implements ConverterInterface
     public function convert(string $value): string
     {
         //check for inline linebreaks
-        $search = array('\r', '\n', '\f', '\t', '\v');
+        $search = ['\r', '\n', '\f', '\t', '\v'];
         $value  = str_replace($search, ';', $value);
 
         // replace replacement characters regular spaces

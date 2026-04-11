@@ -22,31 +22,7 @@ class UTF7Converter implements ConverterInterface
                 $value .= "\n" . mb_convert_encoding($value, 'UTF-8', 'UTF-7');
             } else {
                 //list of all critical UTF7 codepoints
-                $schemes = array(
-                    '+ACI-'      => '"',
-                    '+ADw-'      => '<',
-                    '+AD4-'      => '>',
-                    '+AFs-'      => '[',
-                    '+AF0-'      => ']',
-                    '+AHs-'      => '{',
-                    '+AH0-'      => '}',
-                    '+AFw-'      => '\\',
-                    '+ADs-'      => ';',
-                    '+ACM-'      => '#',
-                    '+ACY-'      => '&',
-                    '+ACU-'      => '%',
-                    '+ACQ-'      => '$',
-                    '+AD0-'      => '=',
-                    '+AGA-'      => '`',
-                    '+ALQ-'      => '"',
-                    '+IBg-'      => '"',
-                    '+IBk-'      => '"',
-                    '+AHw-'      => '|',
-                    '+ACo-'      => '*',
-                    '+AF4-'      => '^',
-                    '+ACIAPg-'   => '">',
-                    '+ACIAPgA8-' => '">'
-                );
+                $schemes = ['+ACI-'      => '"', '+ADw-'      => '<', '+AD4-'      => '>', '+AFs-'      => '[', '+AF0-'      => ']', '+AHs-'      => '{', '+AH0-'      => '}', '+AFw-'      => '\\', '+ADs-'      => ';', '+ACM-'      => '#', '+ACY-'      => '&', '+ACU-'      => '%', '+ACQ-'      => '$', '+AD0-'      => '=', '+AGA-'      => '`', '+ALQ-'      => '"', '+IBg-'      => '"', '+IBk-'      => '"', '+AHw-'      => '|', '+ACo-'      => '*', '+AF4-'      => '^', '+ACIAPg-'   => '">', '+ACIAPgA8-' => '">'];
 
                 $value = str_ireplace(
                     array_keys($schemes),

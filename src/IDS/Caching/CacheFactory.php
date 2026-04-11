@@ -68,7 +68,7 @@ class CacheFactory
             ucfirst((string) $config['caching'])
         );
         $class   = '\\IDS\\Caching\\' . $wrapper . 'Cache';
-        $path    = dirname(__FILE__) . DIRECTORY_SEPARATOR . $wrapper . 'Cache.php';
+        $path    = __DIR__ . DIRECTORY_SEPARATOR . $wrapper . 'Cache.php';
 
         if (file_exists($path)) {
             include_once $path;
@@ -76,8 +76,8 @@ class CacheFactory
             if (class_exists($class)) {
                 $method = new \ReflectionMethod($class, 'getInstance');
                 $args = $method->getNumberOfParameters() === 2
-                    ? array($type, $init)
-                    : array($init);
+                    ? [$type, $init]
+                    : [$init];
 
                 $object = $method->invokeArgs(null, $args);
             }

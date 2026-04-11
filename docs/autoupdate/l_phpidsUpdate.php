@@ -59,7 +59,7 @@ class l_phpidsUpdate
         public function __construct ()
         {
                 $this->phpids_base = "YOUR_PATH_TO/phpids/lib/IDS/";
-                $this->hash_cache = array();
+                $this->hash_cache = [];
         }
 
         private function fetchUrl($url)

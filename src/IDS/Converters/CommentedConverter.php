@@ -11,11 +11,7 @@ class CommentedConverter implements ConverterInterface
         // check for existing comments
         if (preg_match('/(?:\<!-|-->|\/\*|\*\/|\/\/\W*\w+\s*$)|(?:--[^-]*-)/ms', $value)) {
 
-            $pattern = array(
-                '/(?:(?:<!)(?:(?:--(?:[^-]*(?:-[^-]+)*)--\s*)*)(?:>))/ms',
-                '/(?:(?:\/\*\/*[^\/\*]*)+\*\/)/ms',
-                '/(?:--[^-]*-)/ms'
-            );
+            $pattern = ['/(?:(?:<!)(?:(?:--(?:[^-]*(?:-[^-]+)*)--\s*)*)(?:>))/ms', '/(?:(?:\/\*\/*[^\/\*]*)+\*\/)/ms', '/(?:--[^-]*-)/ms'];
 
             $converted = (string) preg_replace($pattern, ';', $value);
             $value    .= "\n" . $converted;

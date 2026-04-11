@@ -6,7 +6,7 @@ $workspaceRoot = realpath(__DIR__ . '/../../..');
 $defaultTempRoot = ($workspaceRoot !== false ? $workspaceRoot . DIRECTORY_SEPARATOR . 'tmp' : sys_get_temp_dir());
 $runtimeTempRoot = null;
 
-$config = array();
+$config = [];
 foreach ($GLOBALS as $name => $value) {
     if (strpos($name, 'IDS_') !== 0) {
         continue;

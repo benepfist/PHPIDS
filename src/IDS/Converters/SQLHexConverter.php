@@ -8,7 +8,7 @@ class SQLHexConverter implements ConverterInterface
 {
     public function convert(string $value): string
     {
-        $matches = array();
+        $matches = [];
         if (preg_match_all('/(?:(?:\A|[^\d])0x[a-f\d]{3,}[a-f\d]*)+/im', $value, $matches)) {
             foreach ($matches[0] as $match) {
                 $converted = '';

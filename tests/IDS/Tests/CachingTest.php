@@ -161,7 +161,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         $this->init->config['Caching']['expiration_time'] = 0;
         $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
         $cache = CacheFactory::factory($this->init, 'storage');
-        $cache = $cache->setCache(array(1,2,3,4));
+        $cache = $cache->setCache([1, 2, 3, 4]);
         $this->assertTrue($cache instanceof FileCache);
     }
 
@@ -171,8 +171,8 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         $this->init->config['Caching']['expiration_time'] = 0;
         $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
         $cache = CacheFactory::factory($this->init, 'storage');
-        $cache = $cache->setCache(array(1,2,3,4));
-        $this->assertEquals($cache->getCache(), array(1,2,3,4));
+        $cache = $cache->setCache([1, 2, 3, 4]);
+        $this->assertEquals($cache->getCache(), [1, 2, 3, 4]);
     }
 
     public function testCachingFileGetCacheReturnsFalseWhenFileIsMissing()
@@ -204,7 +204,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
 
         $cache = CacheFactory::factory($this->init, 'storage');
-        $cache->setCache(array(1,2,3,4));
+        $cache->setCache([1, 2, 3, 4]);
 
         sleep(2);
 
@@ -220,7 +220,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         $cache = CacheFactory::factory($this->init, 'storage');
 
         $this->expectException(\Exception::class);
-        $cache->setCache(array(1,2,3,4));
+        $cache->setCache([1, 2, 3, 4]);
     }
 
     public function testCachingFileConstructorThrowsForReadonlyCacheFile()
@@ -254,7 +254,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         RuntimeFunctionOverrides::$cachingFopenFailures[IDS_FILTER_CACHE_FILE] = true;
 
         $this->expectException(\Exception::class);
-        $cache->setCache(array(1,2,3,4));
+        $cache->setCache([1, 2, 3, 4]);
     }
 
     public function testCachingFileSetCacheThrowsWhenSerializationFails()
@@ -267,7 +267,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         RuntimeFunctionOverrides::$forceCachingSerializeFailure = true;
 
         $this->expectException(\Exception::class);
-        $cache->setCache(array(1,2,3,4));
+        $cache->setCache([1, 2, 3, 4]);
     }
 
     public function testCachingFileSetCacheLeavesExistingValidCacheUntouched()
@@ -279,7 +279,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         file_put_contents(IDS_FILTER_CACHE_FILE, serialize(['existing']));
 
         $cache = CacheFactory::factory($this->init, 'storage');
-        $cache->setCache(array(1,2,3,4));
+        $cache->setCache([1, 2, 3, 4]);
 
         $this->assertSame(['existing'], $cache->getCache());
     }
@@ -295,7 +295,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         $this->init->config['Caching']['caching'] = 'session';
 
         $cache = CacheFactory::factory($this->init, 'storage');
-        $cache = $cache->setCache(array(1,2,3,4));
+        $cache = $cache->setCache([1, 2, 3, 4]);
         $this->assertTrue($cache instanceof SessionCache);
     }
 
@@ -304,8 +304,8 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         $this->init->config['Caching']['caching'] = 'session';
 
         $cache = CacheFactory::factory($this->init, 'storage');
-        $cache = $cache->setCache(array(1,2,3,4));
-        $this->assertEquals($cache->getCache(), array(1,2,3,4));
+        $cache = $cache->setCache([1, 2, 3, 4]);
+        $this->assertEquals($cache->getCache(), [1, 2, 3, 4]);
     }
 
     public function testCachingSessionGetCacheDestroyed()
@@ -313,7 +313,7 @@ class CachingTest extends \PHPUnit\Framework\TestCase
         $this->init->config['Caching']['caching'] = 'session';
 
         $cache = CacheFactory::factory($this->init, 'storage');
-        $cache = $cache->setCache(array(1,2,3,4));
+        $cache = $cache->setCache([1, 2, 3, 4]);
         $_SESSION['PHPIDS']['storage'] = null;
         $this->assertFalse($cache->getCache());
     }

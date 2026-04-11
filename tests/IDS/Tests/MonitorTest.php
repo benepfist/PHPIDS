@@ -45,10 +45,10 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
     {
         $test = new Monitor(
             $this->init,
-            array('csrf')
+            ['csrf']
         );
         $test->setHtml('test1');
-        $this->assertEquals(array('test1'), $test->getHtml());
+        $this->assertEquals(['test1'], $test->getHtml());
     }
 
     public function testAddHtml()
@@ -89,10 +89,10 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
     {
         $test = new Monitor(
             $this->init,
-            array('csrf')
+            ['csrf']
         );
 
-        $result = $test->run(array('user' => 'admin<script/src=http/attacker.com>'));
+        $result = $test->run(['user' => 'admin<script/src=http/attacker.com>']);
 
         foreach ($result->getEvent('user')->getFilters() as $filter) {
             $this->assertTrue(in_array('csrf', $filter->getTags()));
@@ -104,10 +104,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $test = new Monitor(
             $this->init
         );
-        $result = $test->run(array(
-            'id'   => '9<script/src=http/attacker.com>',
-            'name' => '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="'
-        ));
+        $result = $test->run(['id'   => '9<script/src=http/attacker.com>', 'name' => '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="']);
         $this->assertTrue($result->hasEvent('id'));
         $this->assertTrue($result->hasEvent('name'));
     }
@@ -115,7 +112,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
     public function testNoResult()
     {
         $test = new Monitor($this->init);
-        $this->assertTrue($test->run(array('test', 'bla'))->isEmpty());
+        $this->assertTrue($test->run(['test', 'bla'])->isEmpty());
     }
 
     public function testSetExceptionsString()
@@ -130,7 +127,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
     public function testSetExceptionsArray()
     {
         $test = new Monitor($this->init);
-        $exceptions = array('test1', 'test2');
+        $exceptions = ['test1', 'test2'];
         $test->setExceptions($exceptions);
         $this->assertEquals($exceptions, $test->getExceptions());
     }
@@ -140,15 +137,12 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $test = new Monitor(
             $this->init
         );
-        $this->assertEquals(33, $test->run(array(
-            '9<script/src=http/attacker.com>',
-            '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="'
-        ))->getImpact());
+        $this->assertEquals(33, $test->run(['9<script/src=http/attacker.com>', '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="'])->getImpact());
     }
 
     public function testListWithKeyScanning()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits['test1'] = '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="';
         $exploits['test2'] = '9<script/src=http/attacker.com>';
         $exploits['7<script/src=http/attacker.com>'] = '9<script/src=http/attacker.com>';
@@ -164,7 +158,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testListWithException()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits['scanme.1'] = '9<script/src=http/attacker.com>';
         $exploits['scanme.2'] = '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="';
         $exploits['ignoreme'] = '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="';
@@ -172,7 +166,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
             $this->init
         );
 
-        $exceptions = array('ignoreme');
+        $exceptions = ['ignoreme'];
         $test->setExceptions($exceptions);
 
         $result = $test->run($exploits);
@@ -181,7 +175,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testListWithWildcardException()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits['scanme.1'] = '9<script/src=http/attacker.com>';
         $exploits['scanme.2'] = '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="';
         $exploits['ignoreme'] = '" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="';
@@ -189,7 +183,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
             $this->init
         );
 
-        $exceptions = array('/.*oreme$/im');
+        $exceptions = ['/.*oreme$/im'];
         $test->setExceptions($exceptions);
 
         $result = $test->run($exploits);
@@ -198,9 +192,9 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testListWithSubKeys()
     {
-        $exploits = array('9<script/src=http/attacker.com>');
-        $exploits[] = array('" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="');
-        $exploits[] = array('9<script/src=http/attacker.com>');
+        $exploits = ['9<script/src=http/attacker.com>'];
+        $exploits[] = ['" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="'];
+        $exploits[] = ['9<script/src=http/attacker.com>'];
         $test = new Monitor(
             $this->init
         );
@@ -210,9 +204,9 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testListWithSubKeysAndExceptions()
     {
-        $exploits = array('test1' => '9<script/src=http://attacker.com>');
-        $exploits[] = array('" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="');
-        $exploits[] = array('9<script/src=http/attacker.com>');
+        $exploits = ['test1' => '9<script/src=http://attacker.com>'];
+        $exploits[] = ['" style="-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="'];
+        $exploits[] = ['9<script/src=http/attacker.com>'];
         $test = new Monitor(
             $this->init
         );
@@ -223,7 +217,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testAttributeBreakerList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = '">XXX';
         $exploits[] = '" style ="';
         $exploits[] = '"src=xxx a="';
@@ -241,7 +235,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testCommentList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = 'test/**/blafasel';
         $exploits[] = 'OR 1#';
         $exploits[] = '<!-- test -->';
@@ -256,7 +250,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testConcatenatedXSSList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = "s1=''+'java'+''+'scr'+'';s2=''+'ipt'+':'+'ale'+'';s3=''+'rt'+''+'(1)'+''; u1=s1+s2+s3;URL=u1";
         $exploits[] = "s1=0?'1':'i'; s2=0?'1':'fr'; s3=0?'1':'ame'; i1=s1+s2+s3; s1=0?'1':'jav'; s2=0?'1':'ascr'; s3=0?'1':'ipt'; s4=0?'1':':'; s5=0?'1':'ale'; s6=0?'1':'rt'; s7=0?'1':'(1)'; i2=s1+s2+s3+s4+s5+s6+s7;";
         $exploits[] = "s1=0?'':'i';s2=0?'':'fr';s3=0?'':'ame';i1=s1+s2+s3;s1=0?'':'jav';s2=0?'':'ascr';s3=0?'':'ipt';s4=0?'':':';s5=0?'':'ale';s6=0?'':'rt';s7=0?'':'(1)';i2=s1+s2+s3+s4+s5+s6+s7;i=createElement(i1);i.src=i2;x=parentNode;x.appendChild(i);";
@@ -325,7 +319,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testConcatenatedXSSList2()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = "ä=/ä/?'': 0;b=(ä+'eva'+ä);b=(b+'l'+ä);d=(ä+'XSS'+ä);c=(ä+'aler'+ä);c=(c+'t(d)'+ä);ä=.0[b];ä(c)";
         $exploits[] = "b = (x());
                         $ = .0[b];a=$;
@@ -501,7 +495,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testXMLPredicateXSSList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = "a=<r>loca<v>e</v>tion.has<v>va</v>h.subs<v>l</v>tr(1)</r>
                         {b=0e0[a.v.text()
                         ]}http='';b(b(http+a.text()
@@ -523,7 +517,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testConditionalCompilationXSSList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = "/*@cc_on@set@x=88@set@ss=83@set@s=83@*/@cc_on alert(String.fromCharCode(@x,@s,@ss))";
         $exploits[] = "@cc_on eval(@cc_on name)";
         $exploits[] = "@if(@_mc680x0)@else alert(@_jscript_version)@end";
@@ -540,7 +534,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testXSSList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = '\'\'"--><script>eval(String.fromCharCode(88,83,83)));%00';
         $exploits[] = '"></a style="xss:ex/**/pression(alert(1));"';
         $exploits[] = 'top.__proto__._= alert
@@ -643,7 +637,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testSelfContainedXSSList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = 'a=0||\'ev\'+\'al\',b=0||1[a](\'loca\'+\'tion.hash\'),c=0||\'sub\'+\'str\',1[a](b[c](1));';
         $exploits[] = 'eval.call(this,unescape.call(this,location))';
         $exploits[] = 'd=0||\'une\'+\'scape\'||0;a=0||\'ev\'+\'al\'||0;b=0||\'locatio\';b+=0||\'n\'||0;c=b[a];d=c(d);c(d(c(b)))';
@@ -691,7 +685,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testSQLIList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = '" OR 1=1#';
         $exploits[] = '; DROP table Users --';
         $exploits[] = '/**/S/**/E/**/L/**/E/**/C/**/T * FROM users WHERE 1 = 1';
@@ -749,7 +743,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testSQLIList2()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = 'asd"or-1="-1';
         $exploits[] = 'asd"or!1="!1';
         $exploits[] = 'asd"or!(1)="1';
@@ -809,7 +803,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testSQLIList3()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = "' OR UserID IS NOT 2";
         $exploits[] = "' OR UserID IS NOT NULL";
         $exploits[] = "' OR UserID > 1";
@@ -857,7 +851,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testSQLIList4()
     {
-        $exploits = array();
+        $exploits = [];
 
         $exploits[] = "aa'in (0)#(";
         $exploits[] = "aa'!=ascii(1)#(";
@@ -918,7 +912,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testSQLIList5()
     {
-        $exploits = array();
+        $exploits = [];
 
         $exploits[] = "aa'/1 DIV 1 or+1=+'1 ";
         $exploits[] = "aa'&0+1='aa";
@@ -993,7 +987,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testSQLIList6()
     {
-        $exploits = array();
+        $exploits = [];
 
         $exploits[] = "asd'; shutdown; ";
         $exploits[] = "asd'; select null,password,null from users; ";
@@ -1110,7 +1104,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
             $test13 = addslashes($test13);
         }
 
-        $exploits = array();
+        $exploits = [];
         $exploits[] = $test1;
         $exploits[] = $test2;
         $exploits[] = $test3;
@@ -1136,7 +1130,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testURIList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = 'firefoxurl:test|"%20-new-window%20file:\c:/test.txt';
         $exploits[] = 'firefoxurl:test|"%20-new-window%20javascript:alert(\'Cross%2520Browser%2520Scripting!\');"';
         $exploits[] = 'aim: &c:\windows\system32\calc.exe" ini="C:\Documents and Settings\All Users\Start Menu\Programs\Startup\pwnd.bat"';
@@ -1156,7 +1150,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testRFEList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = ';phpinfo()';
         $exploits[] = '@phpinfo()';
         $exploits[] = '"; <?php exec("rm -rf /"); ?>';
@@ -1217,7 +1211,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testUTF7List()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = '+alert(1)';
         $exploits[] = 'ACM=1,1+eval(1+name+(+ACM-1),ACM)';
         $exploits[] = '1+eval(1+name+(+1-1),-1)';
@@ -1235,7 +1229,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testBase64CCConverter()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = '<a href=dat&#x61&#x3atext&#x2fhtml&#x3b&#59base64a&#x2cPHNjcmlwdD5hbGVydCgvWFNTLyk8L3NjcmlwdD4>Test</a>';
         $exploits[] = '<iframe src=data:text/html;base64,PHNjcmlwdD5hbGVydCgvWFNTLyk8L3NjcmlwdD4>';
         $exploits[] = '<applet src="data:text/html;base64,PHNjcmlwdD5hbGVydCgvWFNTLyk8L3NjcmlwdD4" type=text/html>';
@@ -1251,7 +1245,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testDecimalCCConverter()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = '&#60;&#115;&#99;&#114;&#105;&#112;&#116;&#32;&#108;&#97;&#110;&#103;&#117;&#97;&#103;&#101;&#61;&#34;&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#34;&#62;&#32;&#10;&#47;&#47;&#32;&#67;&#114;&#101;&#97;&#109;&#111;&#115;&#32;&#108;&#97;&#32;&#99;&#108;&#97;&#115;&#101;&#32;&#10;&#102;&#117;&#110;&#99;&#116;&#105;&#111;&#110;&#32;&#112;&#111;&#112;&#117;&#112;&#32;&#40;&#32;&#41;&#32;&#123;&#32;&#10;&#32;&#47;&#47;&#32;&#65;&#116;&#114;&#105;&#98;&#117;&#116;&#111;&#32;&#112;&#250;&#98;&#108;&#105;&#99;&#111;&#32;&#105;&#110;&#105;&#99;&#105;&#97;&#108;&#105;&#122;&#97;&#100;&#111;&#32;&#97;&#32;&#97;&#98;&#111;&#117;&#116;&#58;&#98;&#108;&#97;&#110;&#107;&#32;&#10;&#32;&#116;&#104;&#105;&#115;&#46;&#117;&#114;&#108;&#32;&#61;&#32;&#39;&#97;&#98;&#111;&#117;&#116;&#58;&#98;&#108;&#97;&#110;&#107;&#39;&#59;&#32;&#10;&#32;&#47;&#47;&#32;&#65;&#116;&#114;&#105;&#98;&#117;&#116;&#111;&#32;&#112;&#114;&#105;&#118;&#97;&#100;&#111;&#32;&#112;&#97;&#114;&#97;&#32;&#101;&#108;&#32;&#111;&#98;&#106;&#101;&#116;&#111;&#32;&#119;&#105;&#110;&#100;&#111;&#119;&#32;&#10;&#32;&#118;&#97;&#114;&#32;&#118;&#101;&#110;&#116;&#97;&#110;&#97;&#32;&#61;&#32;&#110;&#117;&#108;&#108;&#59;&#32;&#10;&#32;&#47;&#47;&#32;&#46;&#46;&#46;&#32;&#10;&#125;&#32;&#10;&#118;&#101;&#110;&#116;&#97;&#110;&#97;&#32;&#61;&#32;&#110;&#101;&#119;&#32;&#112;&#111;&#112;&#117;&#112;&#32;&#40;&#41;&#59;&#32;&#10;&#118;&#101;&#110;&#116;&#97;&#110;&#97;&#46;&#117;&#114;&#108;&#32;&#61;&#32;&#39;&#104;&#116;&#116;&#112;&#58;&#47;&#47;&#119;&#119;&#119;&#46;&#112;&#114;&#111;&#103;&#114;&#97;&#109;&#97;&#99;&#105;&#111;&#110;&#119;&#101;&#98;&#46;&#110;&#101;&#116;&#47;&#39;&#59;&#32;&#10;&#60;&#47;&#115;&#99;&#114;&#105;&#112;&#116;&#62;&#32;&#10;&#32;';
         $exploits[] = base64_decode('NjAsMTE1LDk5LDExNCwxMDUsMTEyLDExNiw2Miw5NywxMDgsMTAwKzEsMTE0LDExNiw0MCw0OSw0MSw2MCw0NywxMTUsOTksMTE0LDEwNSwxMTIsMTE2LDYy');
 
@@ -1274,7 +1268,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
             $test2 = addslashes($test2);
         }
 
-        $exploits = array();
+        $exploits = [];
         $exploits[] = $test1;
         $exploits[] = $test2;
 
@@ -1309,7 +1303,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
             $test5 = addslashes($test5);
         }
 
-        $exploits = array();
+        $exploits = [];
         $exploits[] = $test1;
         $exploits[] = $test2;
         $exploits[] = $test3;
@@ -1327,7 +1321,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testLDAPInjectionList()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = "*(|(objectclass=*))";
         $exploits[] = "*)(uid=*))(|(uid=*";
         $exploits[] = "*))));";
@@ -1343,7 +1337,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testAllowedHTMLScanningPositive()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits['html_1'] = '<a/onmouseover=alert(document.cookie) href="http://www.google.de/">Google</a>';
         $exploits['html_2'] = '<table width="500"><tr><th>Test</th><iframe/onload=alert(1)> </tr><tr><td>test</td></tr></table>';
         $exploits['html_3'] = '<a style="background:url(//lo/)}lo:expression\(alert(1)));">lo</a>';
@@ -1383,7 +1377,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testAllowedHTMLScanningNegative()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits['html_1'] = '<a href="http://www.google.de/">Google</a>';
         $exploits['html_2'] = '<table width="500"><tr><th>Test</th></tr><tr><td>test</td></tr></table>';
         $exploits['html_3'] = '<table><tr><td class="TableRowAlt">
@@ -1430,7 +1424,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testJSONScanning()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits['json_1'] = '{"a":"b","c":["><script>alert(1);</script>", 111, "eval(name)"]}';
         $test = new Monitor(
             $this->init
@@ -1465,7 +1459,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
     public function testForFalseAlerts()
     {
-        $exploits = array();
+        $exploits = [];
         $exploits[] = 'war bereits als Gastgeber automatisch für das Turnier qualifiziert. Die restlichen 15 Endrundenplätze wurden zwischen Juni
                         2005 und Mai 2007 ermittelt. Hierbei waren mit Ausnahme der UEFA-Zone die jeweiligen Kontinentalmeisterschaften gleichzeitig
                         das Qualifikationsturnier für die Weltmeisterschaft. Die UEFA stellt bei der Endrunde fünf Mannschaften. Die Teilnehmer wurden in
@@ -1541,7 +1535,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
      * @access private
      * @param array $exploits
      */
-    private function _testForPlainEvent($exploits = array())
+    private function _testForPlainEvent($exploits = [])
     {
         foreach ($exploits as $key => $value) {
 
@@ -1551,9 +1545,9 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
 
             if (preg_match('/^html_/', $key)) {
                 $this->init->config['General']['HTML_Purifier_Cache'] = IDS_TEMP_DIR;
-                $test->setHtml(array('test'));
+                $test->setHtml(['test']);
             }
-            $result = $test->run(array('test' => $value));
+            $result = $test->run(['test' => $value]);
 
             if ($result->getImpact() === 0) {
                 echo "\n\nNot detected: ".$value."\n\n";

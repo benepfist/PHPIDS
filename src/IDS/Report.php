@@ -281,31 +281,19 @@ class Report implements \Countable, \IteratorAggregate
         if (!$this->isEmpty()) {
             $output .= vsprintf(
                 "Total impact: %d<br/>\nAffected tags: %s<br/>\n",
-                array(
-                    $this->getImpact(),
-                    implode(', ', $this->getTags())
-                )
+                [$this->getImpact(), implode(', ', $this->getTags())]
             );
 
             foreach ($this->events as $event) {
                 $output .= vsprintf(
                     "<br/>\nVariable: %s | Value: %s<br/>\nImpact: %d | Tags: %s<br/>\n",
-                    array(
-                        htmlspecialchars($event->getName()),
-                        htmlspecialchars($event->getValue()),
-                        $event->getImpact(),
-                        implode(', ', $event->getTags())
-                    )
+                    [htmlspecialchars($event->getName()), htmlspecialchars($event->getValue()), $event->getImpact(), implode(', ', $event->getTags())]
                 );
 
                 foreach ($event as $filter) {
                     $output .= vsprintf(
                         "Description: %s | Tags: %s | ID %s<br/>\n",
-                        array(
-                            $filter->getDescription(),
-                            implode(', ', $filter->getTags()),
-                            $filter->getId()
-                        )
+                        [$filter->getDescription(), implode(', ', $filter->getTags()), $filter->getId()]
                     );
                 }
             }
@@ -315,10 +303,7 @@ class Report implements \Countable, \IteratorAggregate
             if ($centrifuge = $this->getCentrifuge()) {
                 $output .= vsprintf(
                     "Centrifuge detection data<br/> Threshold: %s<br/> Ratio: %s",
-                    array(
-                        isset($centrifuge['threshold']) && $centrifuge['threshold'] ? $centrifuge['threshold'] : '---',
-                        isset($centrifuge['ratio']) && $centrifuge['ratio'] ? $centrifuge['ratio'] : '---'
-                    )
+                    [isset($centrifuge['threshold']) && $centrifuge['threshold'] ? $centrifuge['threshold'] : '---', isset($centrifuge['ratio']) && $centrifuge['ratio'] ? $centrifuge['ratio'] : '---']
                 );
                 if (isset($centrifuge['converted'])) {
                     $output .= '<br/>  Converted: ' . $centrifuge['converted'];

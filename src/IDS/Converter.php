@@ -84,15 +84,7 @@ class Converter
             asort($array);
 
             // Normalize certain tokens
-            $schemes = array(
-                '~' => '+',
-                '^' => '+',
-                '|' => '+',
-                '*' => '+',
-                '%' => '+',
-                '&' => '+',
-                '/' => '+'
-            );
+            $schemes = ['~' => '+', '^' => '+', '|' => '+', '*' => '+', '%' => '+', '&' => '+', '/' => '+'];
 
             $converted = implode($array);
 

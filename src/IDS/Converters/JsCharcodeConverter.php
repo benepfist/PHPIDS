@@ -8,7 +8,7 @@ class JsCharcodeConverter implements ConverterInterface
 {
     public function convert(string $value): string
     {
-        $matches = array();
+        $matches = [];
 
         // check if value matches typical charCode pattern
         if (preg_match_all('/(?:[\d+-=\/\* ]+(?:\s?,\s?[\d+-=\/\* ]+)){4,}/ms', $value, $matches)) {

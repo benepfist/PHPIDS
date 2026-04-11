@@ -75,20 +75,12 @@ class IdsComponent extends Object
     /**
      * define the threshold for the ids reactions
      */
-    private $threshold = array(
-        'log'      => 3,
-        'mail'     => 9,
-        'warn'     => 27,
-        'kick'     => 81
-    );
+    private $threshold = ['log'      => 3, 'mail'     => 9, 'warn'     => 27, 'kick'     => 81];
 
     /**
      * define the email addresses for idsmail
      */
-    private $email = array(
-        'address1@what.ever',
-        'address2@what.ever'
-    );
+    private $email = ['address1@what.ever', 'address2@what.ever'];
 
     /**
      * the init object
@@ -190,9 +182,7 @@ class IdsComponent extends Object
     private function idslog($result, $reaction = 0)
     {
         $user = $this->controller
-            ->Session->read('User.id') ?
-                $this->controller->Session->read('User.id') :
-                0;
+            ->Session->read('User.id') ?: 0;
 
         $ip = ($_SERVER['SERVER_ADDR'] != '127.0.0.1') ?
                     $_SERVER['SERVER_ADDR'] :
@@ -201,26 +191,12 @@ class IdsComponent extends Object
                                  '127.0.0.1');
 
         foreach ($result as $event) {
-            $data = array(
-                'Intrusion' => array(
-                    'name'      => $event->getName(),
-                    'value'     => stripslashes($event->getValue()),
-                    'page'      => $_SERVER['REQUEST_URI'],
-                    'userid'    => $user,
-                    'session'   => session_id() ? session_id() : '0',
-                    'ip'        => $ip,
-                    'reaction'  => $reaction,
-                    'impact'    => $result->getImpact()
-                )
-            );
+            $data = ['Intrusion' => ['name'      => $event->getName(), 'value'     => stripslashes($event->getValue()), 'page'      => $_SERVER['REQUEST_URI'], 'userid'    => $user, 'session'   => session_id() ?: '0', 'ip'        => $ip, 'reaction'  => $reaction, 'impact'    => $result->getImpact()]];
         }
 
         loadModel('Intrusion');
         $intrusion = new Intrusion;
-        $saveable  = array(
-            'name', 'value', 'page', 'userid',
-            'session', 'ip', 'reaction', 'impact'
-        );
+        $saveable  = ['name', 'value', 'page', 'userid', 'session', 'ip', 'reaction', 'impact'];
         $intrusion->save($data, false, $saveable);
 
         return true;

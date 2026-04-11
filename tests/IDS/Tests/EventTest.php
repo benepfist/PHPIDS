@@ -30,10 +30,7 @@ class EventTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void {
         $this->event = new Event("handled_key", "my val",
-            array(
-                new Filter(1, '^test$', 'my description', array('tag1', 'tag2'), 10),
-                new Filter(1, '^test2$', 'my other desc', array('tag2', 'tag3'), 4)
-            )
+            [new Filter(1, '^test$', 'my description', ['tag1', 'tag2'], 10), new Filter(1, '^test2$', 'my other desc', ['tag2', 'tag3'], 4)]
         );
     }
 
@@ -46,12 +43,12 @@ class EventTest extends \PHPUnit\Framework\TestCase
     public function testValueAggregation()
     {
         $this->assertEquals(14, $this->event->getImpact());
-        $this->assertEquals(array('tag1', 'tag2', 'tag3'), $this->event->getTags());
+        $this->assertEquals(['tag1', 'tag2', 'tag3'], $this->event->getTags());
     }
 
     public function testIterator()
     {
-        $regexps = array('^test$', '^test2$');
+        $regexps = ['^test$', '^test2$'];
         foreach ($this->event as $key => $filter)
             $this->assertEquals($regexps[$key], $filter->getRule());
         foreach ($this->event->getFilters() as $key => $filter)

@@ -37,14 +37,9 @@ try {
     * Please keep in mind what array_merge does and how this might interfer
     * with your variables_order settings
     */
-    $request = array(
-        'REQUEST' => $_REQUEST,
-        'GET' => $_GET,
-        'POST' => $_POST,
-        'COOKIE' => $_COOKIE
-    );
+    $request = ['REQUEST' => $_REQUEST, 'GET' => $_GET, 'POST' => $_POST, 'COOKIE' => $_COOKIE];
 
-    $init = Init::init(dirname(__FILE__) . '/../../lib/IDS/Config/Config.ini.php');
+    $init = Init::init(__DIR__ . '/../../lib/IDS/Config/Config.ini.php');
 
 
     /**
@@ -59,7 +54,7 @@ try {
      *
      * or you can access the config directly like here:
      */
-    $init->config['General']['base_path'] = dirname(__FILE__) . '/../../lib/IDS/';
+    $init->config['General']['base_path'] = __DIR__ . '/../../lib/IDS/';
 
     $init->config['General']['use_base_path'] = true;
 

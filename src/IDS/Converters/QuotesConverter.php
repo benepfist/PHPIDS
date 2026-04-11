@@ -9,7 +9,7 @@ class QuotesConverter implements ConverterInterface
     public function convert(string $value): string
     {
         // normalize different quotes to "
-        $pattern = array('\'', '`', '´', '’', '‘');
+        $pattern = ['\'', '`', '´', '’', '‘'];
         $value   = str_replace($pattern, '"', $value);
 
         //make sure harmless quoted strings don't generate false alerts

@@ -30,20 +30,11 @@ class ReportTest extends \PHPUnit\Framework\TestCase
     protected $report;
 
     protected function setUp(): void {
-        $this->report = new Report(array(
-            new Event("key_a", 'val_b',
-                array(
-                    new Filter(1, '^test_a1$', 'desc_a1', array('tag_a1', 'tag_a2'), 1),
-                    new Filter(1, '^test_a2$', 'desc_a2', array('tag_a2', 'tag_a3'), 2)
-                )
-            ),
-            new Event('key_b', 'val_b',
-                array(
-                    new Filter(1, '^test_b1$', 'desc_b1', array('tag_b1', 'tag_b2'), 3),
-                    new Filter(1, '^test_b2$', 'desc_b2', array('tag_b2', 'tag_b3'), 4),
-                )
-            )
-        ));
+        $this->report = new Report([new Event("key_a", 'val_b',
+            [new Filter(1, '^test_a1$', 'desc_a1', ['tag_a1', 'tag_a2'], 1), new Filter(1, '^test_a2$', 'desc_a2', ['tag_a2', 'tag_a3'], 2)]
+        ), new Event('key_b', 'val_b',
+            [new Filter(1, '^test_b1$', 'desc_b1', ['tag_b1', 'tag_b2'], 3), new Filter(1, '^test_b2$', 'desc_b2', ['tag_b2', 'tag_b3'], 4)]
+        )]);
     }
 
     public function testEmpty()
@@ -66,7 +57,7 @@ class ReportTest extends \PHPUnit\Framework\TestCase
 
     public function testGetTags()
     {
-        $this->assertEquals(array('tag_a1', 'tag_a2', 'tag_a3', 'tag_b1', 'tag_b2', 'tag_b3'), $this->report->getTags());
+        $this->assertEquals(['tag_a1', 'tag_a2', 'tag_a3', 'tag_b1', 'tag_b2', 'tag_b3'], $this->report->getTags());
     }
 
     public function testImpactSum()
@@ -83,9 +74,9 @@ class ReportTest extends \PHPUnit\Framework\TestCase
     {
         $this->testImpactSum();
         $this->testGetTags();
-        $this->report->addEvent(new Event('key_c', 'val_c', array(new Filter(1, 'test_c1', 'desc_c1', array('tag_c1'), 10))));
+        $this->report->addEvent(new Event('key_c', 'val_c', [new Filter(1, 'test_c1', 'desc_c1', ['tag_c1'], 10)]));
         $this->assertEquals(20, $this->report->getImpact());
-        $this->assertEquals(array('tag_a1', 'tag_a2', 'tag_a3', 'tag_b1', 'tag_b2', 'tag_b3', 'tag_c1'), $this->report->getTags());
+        $this->assertEquals(['tag_a1', 'tag_a2', 'tag_a3', 'tag_b1', 'tag_b2', 'tag_b3', 'tag_c1'], $this->report->getTags());
     }
 
     public function testIteratorAggregate()
@@ -107,7 +98,7 @@ class ReportTest extends \PHPUnit\Framework\TestCase
 
     public function testGetEvent()
     {
-        $this->report->addEvent(new Event('key_c', 'val_c', array(new Filter(1, 'test_c1', 'desc_c1', array('tag_c1'), 10))));
+        $this->report->addEvent(new Event('key_c', 'val_c', [new Filter(1, 'test_c1', 'desc_c1', ['tag_c1'], 10)]));
         $this->assertTrue($this->report->getEvent('key_c') instanceof Event);
     }
 

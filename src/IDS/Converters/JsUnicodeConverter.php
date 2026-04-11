@@ -8,7 +8,7 @@ class JsUnicodeConverter implements ConverterInterface
 {
     public function convert(string $value): string
     {
-        $matches = array();
+        $matches = [];
         preg_match_all('/\\\u[0-9a-f]{4}/ims', $value, $matches);
 
         if (!empty($matches[0])) {

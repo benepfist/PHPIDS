@@ -31,21 +31,7 @@ class RuleTest extends \PHPUnit\Framework\TestCase
 
     public static function getPayloads()
     {
-        return array(
-            array(20, "if  ("),
-            array(20, "if ("),
-            array(20, "if("),
-            array(20, "elseif  ("),
-            array(20, "elseif ("),
-            array(20, "elseif("),
-            array(20, "for  ("),
-            array(20, "for ("),
-            array(20, "for("),
-            array(20, "foreach  ("),
-            array(20, "foreach ("),
-            array(20, "foreach("),
-            array(20, "for each  ("),
-        );
+        return [[20, "if  ("], [20, "if ("], [20, "if("], [20, "elseif  ("], [20, "elseif ("], [20, "elseif("], [20, "for  ("], [20, "for ("], [20, "for("], [20, "foreach  ("], [20, "foreach ("], [20, "foreach("], [20, "for each  ("]];
     }
 
     protected function setUp(): void {
@@ -61,7 +47,7 @@ class RuleTest extends \PHPUnit\Framework\TestCase
     public function testSingleRules($ruleId, $payload)
     {
         $monitor = new Monitor($this->init);
-        $result = $monitor->run(array('payload' => $payload));
+        $result = $monitor->run(['payload' => $payload]);
 
         $event = $result->getEvent('payload');
         $this->assertInstanceOf('IDS\Event', $event);
