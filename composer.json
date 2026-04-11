@@ -24,6 +24,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^1.11",
-        "phpunit/phpunit": "12.2"
+        "phpunit/phpunit": "12.2",
+        "phpdocumentor/phpdocumentor": "^3.9"
     }
 }
