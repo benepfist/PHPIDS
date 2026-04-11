@@ -1,0 +1,78 @@
+
+
+[1;37;40mCode Coverage Report:      [0m
+[1;37;40m  2026-04-11 19:24:14      [0m
+[1;37;40m                           [0m
+[1;37;40m Summary:                  [0m
+[30;42m  Classes: 91.18% (31/34)  [0m
+[30;42m  Methods: 94.44% (102/108)[0m
+[30;42m  Lines:   93.16% (872/936)[0m
+
+IDS\Caching\ApcCache
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
+IDS\Caching\CacheFactory
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
+IDS\Caching\DatabaseCache
+  [37;41mMethods:  33.33% ( 2/ 6)[0m   [30;43mLines:  65.00% ( 39/ 60)[0m
+IDS\Caching\FileCache
+  [30;42mMethods: 100.00% ( 5/ 5)[0m   [30;42mLines: 100.00% ( 39/ 39)[0m
+IDS\Caching\MemcachedCache
+  [30;42mMethods: 100.00% ( 5/ 5)[0m   [30;42mLines: 100.00% ( 29/ 29)[0m
+IDS\Caching\SessionCache
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% (  9/  9)[0m
+IDS\Converter
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 79/ 79)[0m
+IDS\ConverterPipeline
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  6/  6)[0m
+IDS\Converters\CommentedConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 14/ 14)[0m
+IDS\Converters\ConcatenatedConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 35/ 35)[0m
+IDS\Converters\ControlCharsConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 54/ 54)[0m
+IDS\Converters\EntitiesConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 11/ 11)[0m
+IDS\Converters\JsCharcodeConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 33/ 33)[0m
+IDS\Converters\JsRegexModifiersConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  1/  1)[0m
+IDS\Converters\JsUnicodeConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  8/  8)[0m
+IDS\Converters\NestedBase64Converter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  7/  7)[0m
+IDS\Converters\OutOfRangeCharsConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  5/  5)[0m
+IDS\Converters\ProprietaryEncodingsConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 17/ 17)[0m
+IDS\Converters\QuotesConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  4/  4)[0m
+IDS\Converters\SQLHexConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
+IDS\Converters\SQLKeywordsConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 23/ 23)[0m
+IDS\Converters\UTF7Converter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 40/ 40)[0m
+IDS\Converters\UrlencodeSqlCommentConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  6/  6)[0m
+IDS\Converters\WhiteSpaceConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  4/  4)[0m
+IDS\Converters\XMLConverter
+  [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% (  4/  4)[0m
+IDS\Event
+  [30;42mMethods: 100.00% ( 8/ 8)[0m   [30;42mLines: 100.00% ( 29/ 29)[0m
+IDS\Filter
+  [30;42mMethods: 100.00% ( 7/ 7)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
+IDS\Filter\Provider\CachedFilterProvider
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 26/ 26)[0m
+IDS\Filter\Provider\JsonFilterProvider
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 22/ 22)[0m
+IDS\Filter\Provider\XmlFilterProvider
+  [37;41mMethods:  50.00% ( 1/ 2)[0m   [30;42mLines:  95.83% ( 23/ 24)[0m
+IDS\Filter\Storage
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 25/ 25)[0m
+IDS\Init
+  [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% ( 25/ 25)[0m
+IDS\Monitor
+  [30;42mMethods:  94.44% (17/18)[0m   [30;42mLines:  99.21% (125/126)[0m
+IDS\Report
+  [30;42mMethods: 100.00% (13/13)[0m   [30;42mLines: 100.00% ( 72/ 72)[0m

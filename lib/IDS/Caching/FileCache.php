@@ -163,7 +163,7 @@ class FileCache implements CacheInterface
             return false;
         }
 
-        $content = file_get_contents($this->path);
+        $content = @file_get_contents($this->path);
         if ($content === false) {
             return false;
         }

@@ -2,19 +2,69 @@
 
 namespace IDS\Tests\Filter\Provider;
 
-use PHPUnit\Framework\TestCase;
+use IDS\Filter;
 use IDS\Filter\Provider\XmlFilterProvider;
+use IDS\Tests\Support\RuntimeFunctionOverrides;
+use PHPUnit\Framework\TestCase;
 
 class XmlFilterProviderTest extends TestCase
 {
-    protected function setUp(): void
+    private array $tempFiles = [];
+
+    protected function tearDown(): void
     {
-        // TODO: setup
+        RuntimeFunctionOverrides::reset();
+        foreach ($this->tempFiles as $file) {
+            @unlink($file);
+        }
     }
 
-    public function testInstantiation(): void
+    public function testGetFiltersLoadsDefaultFilterSet(): void
     {
-        // Basic instantiation check
-        $this->assertTrue(true);
+        $provider = new XmlFilterProvider(IDS_FILTER_SET_XML);
+
+        $filters = $provider->getFilters();
+
+        $this->assertNotEmpty($filters);
+        $this->assertContainsOnlyInstancesOf(Filter::class, $filters);
+    }
+
+    public function testGetFiltersThrowsForMissingSource(): void
+    {
+        $provider = new XmlFilterProvider(__DIR__ . '/missing-filter-set.xml');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $provider->getFilters();
+    }
+
+    public function testGetFiltersThrowsForInvalidXmlPayload(): void
+    {
+        $file = $this->createTempFile('<filters><filter>');
+        $provider = new XmlFilterProvider($file);
+
+        $this->expectException(\RuntimeException::class);
+        $provider->getFilters();
+    }
+
+    public function testGetFiltersThrowsWhenSimpleXmlExtensionIsUnavailable(): void
+    {
+        RuntimeFunctionOverrides::$providerExtensionOverrides['simplexml'] = false;
+        $provider = new XmlFilterProvider(IDS_FILTER_SET_XML);
+
+        $this->expectException(\RuntimeException::class);
+        $provider->getFilters();
+    }
+
+    private function createTempFile(string $contents): string
+    {
+        $file = tempnam(sys_get_temp_dir(), 'phpids-xml-');
+        if ($file === false) {
+            $this->fail('Unable to create temporary XML fixture.');
+        }
+
+        file_put_contents($file, $contents);
+        $this->tempFiles[] = $file;
+
+        return $file;
     }
 }

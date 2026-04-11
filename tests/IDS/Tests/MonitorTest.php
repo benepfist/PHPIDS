@@ -51,6 +51,32 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array('test1'), $test->getHtml());
     }
 
+    public function testAddHtml()
+    {
+        $test = new Monitor($this->init);
+        $test->setHtml(['field_a']);
+        $test->addHtml('field_b');
+
+        $this->assertSame(['field_a', 'field_b'], $test->getHtml());
+    }
+
+    public function testSetJsonAndAddJson()
+    {
+        $test = new Monitor($this->init);
+        $test->setJson('json_1');
+        $test->addJson('json_2');
+
+        $this->assertSame(['json_1', 'json_2'], $test->getJson());
+    }
+
+    public function testConstructorThrowsForUnwritableTempDirectory()
+    {
+        $this->init->config['General']['tmp_path'] = 'Z:/phpids/monitor-tmp';
+
+        $this->expectException(\InvalidArgumentException::class);
+        new Monitor($this->init);
+    }
+
     public function testGetStorage()
     {
         $test = new Monitor(
@@ -1391,6 +1417,17 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(25, $result->getImpact());
     }
 
+    public function testAllowedHTMLScanningThrowsForUnwritablePurifierCache()
+    {
+        $this->init->config['General']['HTML_Purifier_Cache'] = 'Z:/phpids/htmlpurifier-cache';
+
+        $test = new Monitor($this->init);
+        $test->setHtml(['html_1']);
+
+        $this->expectException(\Exception::class);
+        $test->run(['html_1' => '<img src=x onerror=alert(1)>']);
+    }
+
     public function testJSONScanning()
     {
         $exploits = array();
@@ -1401,6 +1438,18 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $test->setJson(array_keys($exploits));
         $result = $test->run($exploits);
         $this->assertEquals(32, $result->getImpact());
+    }
+
+    public function testJSONScanningWithStructuredJsonKey()
+    {
+        $key = '{"wrapper":{"field":"payload"}}';
+        $value = '{"nested":"<script>alert(1)</script>"}';
+
+        $test = new Monitor($this->init);
+        $test->setJson([$key]);
+        $result = $test->run([$key => $value]);
+
+        $this->assertGreaterThan(0, $result->getImpact());
     }
 
     public function testForFalseAlerts()

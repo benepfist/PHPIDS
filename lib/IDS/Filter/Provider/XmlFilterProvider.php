@@ -21,10 +21,16 @@ class XmlFilterProvider implements FilterProviderInterface
             throw new \InvalidArgumentException(sprintf("Invalid config: %s doesn't exist.", $this->source));
         }
 
-        if (LIBXML_VERSION >= 20621) {
-            $filters = simplexml_load_file($this->source, null, LIBXML_COMPACT);
-        } else {
-            $filters = simplexml_load_file($this->source);
+        $previous = libxml_use_internal_errors(true);
+        try {
+            if (LIBXML_VERSION >= 20621) {
+                $filters = simplexml_load_file($this->source, null, LIBXML_COMPACT);
+            } else {
+                $filters = simplexml_load_file($this->source);
+            }
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
         }
 
         if (empty($filters)) {

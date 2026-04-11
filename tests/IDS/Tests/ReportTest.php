@@ -116,4 +116,19 @@ class ReportTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->report->getEvent('not_available'));
     }
 
+    public function testSetAndGetCentrifuge()
+    {
+        $data = ['threshold' => 3.5, 'ratio' => 1.2, 'converted' => 'alert(1)'];
+        $this->report->setCentrifuge($data);
+
+        $this->assertSame($data, $this->report->getCentrifuge());
+        $this->assertStringContainsString('Centrifuge detection data', $this->report->__toString());
+    }
+
+    public function testSetCentrifugeRejectsEmptyArray()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->report->setCentrifuge([]);
+    }
+
 }

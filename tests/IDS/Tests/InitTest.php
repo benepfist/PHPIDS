@@ -77,9 +77,50 @@ class InitTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->init->config, $data);
     }
 
+    public function testGetBasePathReturnsConfiguredPathWhenEnabled()
+    {
+        $this->init->config['General']['base_path'] = '/tmp/phpids';
+        $this->init->config['General']['use_base_path'] = true;
+
+        $this->assertSame('/tmp/phpids', $this->init->getBasePath());
+    }
+
+    public function testGetBasePathReturnsNullWhenDisabled()
+    {
+        $this->init->config['General']['base_path'] = '/tmp/phpids';
+        $this->init->config['General']['use_base_path'] = false;
+
+        $this->assertNull($this->init->getBasePath());
+    }
+
     public function testInstanciatingInitObjectWithoutPassingConfigFile()
     {
         $init = Init::init();
         $this->assertInstanceOf('IDS\\Init', $init);
+    }
+
+    public function testInitReturnsCachedInstanceForSameConfigPath()
+    {
+        $first = Init::init(IDS_CONFIG);
+        $second = Init::init(IDS_CONFIG);
+
+        $this->assertSame($first, $second);
+    }
+
+    public function testInitThrowsRuntimeExceptionForUnparseableConfig()
+    {
+        $file = tempnam(sys_get_temp_dir(), 'phpids-ini-');
+        if ($file === false) {
+            $this->fail('Unable to create temporary ini fixture.');
+        }
+
+        file_put_contents($file, "[General\nbroken = true");
+
+        try {
+            $this->expectException(\RuntimeException::class);
+            Init::init($file);
+        } finally {
+            @unlink($file);
+        }
     }
 }

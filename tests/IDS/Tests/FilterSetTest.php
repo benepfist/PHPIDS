@@ -64,6 +64,17 @@ class FilterSetTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    public function testUnsupportedFilterTypeThrows()
+    {
+        $config = parse_ini_file(IDS_CONFIG, true);
+        $init = new Init($config === false ? [] : $config);
+        $init->config['General']['filter_type'] = 'unsupported';
+        $init->config['Caching']['caching'] = 'none';
+
+        $this->expectException(\InvalidArgumentException::class);
+        new Storage($init);
+    }
+
     protected function assertFiltersMatch(Filter $left, Filter $right)
     {
         $this->assertNotSame($left, $right);
