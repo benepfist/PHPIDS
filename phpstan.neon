@@ -1,6 +1,6 @@
 parameters:
     level: 8
     paths:
-        - lib
+        - src
     excludePaths:
-        - lib/IDS/Config/Config.ini.php
+        - src/IDS/Config/Config.ini.php
