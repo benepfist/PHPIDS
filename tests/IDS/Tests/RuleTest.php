@@ -21,7 +21,7 @@ namespace IDS\Tests;
 use IDS\Init;
 use IDS\Monitor;
 
-class RuleTest extends \PHPUnit_Framework_TestCase
+class RuleTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Init
@@ -47,8 +47,7 @@ class RuleTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function setUp()
-    {
+    protected function setUp(): void {
         $this->init = Init::init(IDS_CONFIG);
         $this->init->config['General']['tmp_path'] = IDS_TEMP_DIR;
         $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
