@@ -7,6 +7,9 @@
 /phpunit.xml
 /.phpunit.cache
 /.phpunit.result.cache
+/.phpdoc/
+phpDocumentor.phar
+local-php.exe
 
 # Don't include lock file
 composer.lock
