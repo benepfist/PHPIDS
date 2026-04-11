@@ -14,12 +14,12 @@ class JsCharcodeConverter implements ConverterInterface
         if (preg_match_all('/(?:[\d+-=\/\* ]+(?:\s?,\s?[\d+-=\/\* ]+)){4,}/ms', $value, $matches)) {
             $converted = '';
             $string    = implode(',', $matches[0]);
-            $string    = preg_replace('/\s/', '', $string);
-            $string    = preg_replace('/\w+=/', '', $string);
+            $string    = preg_replace('/\s/', '', $string) ?? $string;
+            $string    = preg_replace('/\w+=/', '', $string) ?? $string;
             $charcode  = explode(',', $string);
 
             foreach ($charcode as $char) {
-                $char = preg_replace('/\W0/s', '', $char);
+                $char = preg_replace('/\W0/s', '', $char) ?? $char;
 
                 if (preg_match_all('/\d*[+-\/\* ]\d+/', $char, $matches)) {
                     $match = preg_split('/(\W?\d+)/', implode('', $matches[0]), -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -41,7 +41,7 @@ class JsCharcodeConverter implements ConverterInterface
         // check for octal charcode pattern
         if (preg_match_all('/(?:(?:[\\\]+\d+[ \t]*){8,})/ims', $value, $matches)) {
             $converted = '';
-            $charcode  = explode('\\', preg_replace('/\s/', '', implode(',', $matches[0])));
+            $charcode  = explode('\\', preg_replace('/\s/', '', implode(',', $matches[0])) ?? implode(',', $matches[0]));
 
             foreach (array_map('octdec', array_filter($charcode)) as $char) {
                 if (20 <= $char && $char <= 127) {
@@ -54,7 +54,7 @@ class JsCharcodeConverter implements ConverterInterface
         // check for hexadecimal charcode pattern
         if (preg_match_all('/(?:(?:[\\\]+\w+\s*){8,})/ims', $value, $matches)) {
             $converted = '';
-            $charcode  = explode('\\', preg_replace('/[ux]/', '', implode(',', $matches[0])));
+            $charcode  = explode('\\', preg_replace('/[ux]/', '', implode(',', $matches[0])) ?? implode(',', $matches[0]));
 
             foreach (array_map('hexdec', array_filter($charcode)) as $char) {
                 if (20 <= $char && $char <= 127) {

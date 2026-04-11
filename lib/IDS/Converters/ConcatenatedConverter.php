@@ -9,8 +9,9 @@ class ConcatenatedConverter implements ConverterInterface
     public function convert(string $value): string
     {
         //normalize remaining backslashes
-        if ($value != preg_replace('/(\w)\\\/', "$1", $value)) {
-            $value .= preg_replace('/(\w)\\\/', "$1", $value);
+        $normalized = preg_replace('/(\w)\\\/', "$1", $value) ?? $value;
+        if ($value != $normalized) {
+            $value .= $normalized;
         }
 
         $compare = stripslashes($value);
@@ -37,20 +38,20 @@ class ConcatenatedConverter implements ConverterInterface
         );
 
         // strip out concatenations
-        $converted = preg_replace($pattern, '', $compare);
+        $converted = preg_replace($pattern, '', $compare) ?? $compare;
 
         //strip object traversal
-        $converted = preg_replace('/\w(\.\w\()/', "$1", $converted);
+        $converted = preg_replace('/\w(\.\w\()/', "$1", $converted) ?? $converted;
 
         // normalize obfuscated method calls
-        $converted = preg_replace('/\)\s*\+/', ")", $converted);
+        $converted = preg_replace('/\)\s*\+/', ")", $converted) ?? $converted;
 
         //convert JS special numbers
         $converted = preg_replace(
             '/(?:\(*[.\d]e[+-]*[^a-z\W]+\)*)|(?:NaN|Infinity)\W/ims',
             '1',
             $converted
-        );
+        ) ?? $converted;
 
         if ($converted && ($compare != $converted)) {
             $value .= "\n" . $converted;

@@ -281,7 +281,7 @@ class DatabaseCache implements CacheInterface
             $statement->bindValue('data', serialize($data));
 
             if (!$statement->execute()) {
-                throw new \PDOException($statement->errorCode());
+                throw new \PDOException($statement->errorCode() ?? '');
             }
         } catch (\PDOException $e) {
             throw new \PDOException('PDOException: ' . $e->getMessage());

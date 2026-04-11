@@ -233,7 +233,7 @@ class Monitor
 
         // check for magic quotes and remove them if necessary
         if (!function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc()) {
-            $value = preg_replace('(\\\(["\'/]))im', '$1', $value);
+            $value = preg_replace('(\\\(["\'/]))im', '$1', $value) ?? $value;
         }
 
         // if html monitoring is enabled for this field - then do it!
@@ -308,8 +308,8 @@ class Monitor
             $config->set('Output.Newline', "\n");
             $this->htmlPurifier = new \HTMLPurifier($config);
 
-            $value = preg_replace('([\x0b-\x0c])', ' ', $value);
-            $key = preg_replace('([\x0b-\x0c])', ' ', $key);
+            $value = preg_replace('([\x0b-\x0c])', ' ', $value) ?? $value;
+            $key = preg_replace('([\x0b-\x0c])', ' ', $key) ?? $key;
 
             $purifiedValue = $this->htmlPurifier->purify($value);
             $purifiedKey   = $this->htmlPurifier->purify($key);
@@ -341,8 +341,8 @@ class Monitor
         /*
          * Remove control chars before pre-check
          */
-        $tmpValue = preg_replace('/\p{C}/', '', $value);
-        $tmpKey = preg_replace('/\p{C}/', '', $key);
+        $tmpValue = preg_replace('/\p{C}/', '', $value) ?? $value;
+        $tmpKey = preg_replace('/\p{C}/', '', $key) ?? $key;
 
         $preCheck = '/<(script|iframe|applet|object)\W/i';
         return !(preg_match($preCheck, $tmpKey) || preg_match($preCheck, $tmpValue));
@@ -365,20 +365,20 @@ class Monitor
          * deal with over-sensitive alt-attribute addition of the purifier
          * and other common html formatting problems
          */
-        $purified = preg_replace('/\s+alt="[^"]*"/m', '', $purified);
-        $purified = preg_replace('/=?\s*"\s*"/m', '', $purified);
-        $original = preg_replace('/\s+alt="[^"]*"/m', '', $original);
-        $original = preg_replace('/=?\s*"\s*"/m', '', $original);
-        $original = preg_replace('/style\s*=\s*([^"])/m', 'style = "$1', $original);
+        $purified = preg_replace('/\s+alt="[^"]*"/m', '', $purified) ?? $purified;
+        $purified = preg_replace('/=?\s*"\s*"/m', '', $purified) ?? $purified;
+        $original = preg_replace('/\s+alt="[^"]*"/m', '', $original) ?? $original;
+        $original = preg_replace('/=?\s*"\s*"/m', '', $original) ?? $original;
+        $original = preg_replace('/style\s*=\s*([^"])/m', 'style = "$1', $original) ?? $original;
 
         # deal with oversensitive CSS normalization
-        $original = preg_replace('/(?:([\w\-]+:)+\s*([^;]+;\s*))/m', '$1$2', $original);
+        $original = preg_replace('/(?:([\w\-]+:)+\s*([^;]+;\s*))/m', '$1$2', $original) ?? $original;
 
         # strip whitespace between tags
-        $original = trim(preg_replace('/>\s*</m', '><', $original));
-        $purified = trim(preg_replace('/>\s*</m', '><', $purified));
+        $original = trim(preg_replace('/>\s*</m', '><', $original) ?? $original);
+        $purified = trim(preg_replace('/>\s*</m', '><', $purified) ?? $purified);
 
-        $original = preg_replace('/(=\s*(["\'`])[^>"\'`]*>[^>"\'`]*["\'`])/m', 'alt$1', $original);
+        $original = preg_replace('/(=\s*(["\'`])[^>"\'`]*>[^>"\'`]*["\'`])/m', 'alt$1', $original) ?? $original;
 
         // no purified html is left
         if (!$purified) {
@@ -406,10 +406,10 @@ class Monitor
         $diff = $length <= 10 ? $differences : mb_substr($differences, 0, strlen($original));
 
         // clean up spaces between tag delimiters
-        $diff = preg_replace('/>\s*</m', '><', $diff);
+        $diff = preg_replace('/>\s*</m', '><', $diff) ?? $diff;
 
         // correct over-sensitively stripped bad html elements
-        $diff = preg_replace('/[^<](iframe|script|embed|object|applet|base|img|style)/m', '<$1', $diff );
+        $diff = preg_replace('/[^<](iframe|script|embed|object|applet|base|img|style)/m', '<$1', $diff ) ?? $diff;
 
         return mb_strlen($diff) >= 4 ? $diff . $plain : null;
     }

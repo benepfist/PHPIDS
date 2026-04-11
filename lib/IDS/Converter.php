@@ -38,31 +38,31 @@ class Converter
         $threshold = 3.49;
         if (strlen($value) > 25) {
             //strip padding
-            $tmp_value = preg_replace('/\s{4}|==$/m', '', $value);
+            $tmp_value = preg_replace('/\s{4}|==$/m', '', $value) ?? $value;
             $tmp_value = preg_replace(
                 '/\s{4}|[\p{L}\d\+\-=,.%()]{8,}/m',
                 'aaa',
                 $tmp_value
-            );
+            ) ?? $tmp_value;
 
             // Check for the attack char ratio
-            $tmp_value = preg_replace('/([*.!?+-])\1{1,}/m', '$1', $tmp_value);
-            $tmp_value = preg_replace('/"[\p{L}\d\s]+"/m', '', $tmp_value);
+            $tmp_value = preg_replace('/([*.!?+-])\1{1,}/m', '$1', $tmp_value) ?? $tmp_value;
+            $tmp_value = preg_replace('/"[\p{L}\d\s]+"/m', '', $tmp_value) ?? $tmp_value;
 
-            $stripped_length = strlen(
-                preg_replace(
-                    '/[\d\s\p{L}\.:,%&\/><\-)!|]+/m',
-                    '',
-                    $tmp_value
-                )
-            );
-            $overall_length = strlen(
-                preg_replace(
-                    '/([\d\s\p{L}:,\.]{3,})+/m',
-                    'aaa',
-                    preg_replace('/\s{2,}/m', '', $tmp_value)
-                )
-            );
+            $stripped = preg_replace(
+                '/[\d\s\p{L}\.:,%&\/><\-)!|]+/m',
+                '',
+                $tmp_value
+            ) ?? $tmp_value;
+            $stripped_length = strlen($stripped);
+
+            $collapsed = preg_replace('/\s{2,}/m', '', $tmp_value) ?? $tmp_value;
+            $overall = preg_replace(
+                '/([\d\s\p{L}:,\.]{3,})+/m',
+                'aaa',
+                $collapsed
+            ) ?? $collapsed;
+            $overall_length = strlen($overall);
 
             if ($stripped_length != 0 && $overall_length/$stripped_length <= $threshold) {
                 if ($monitor !== null) {
@@ -76,7 +76,7 @@ class Converter
 
         if (strlen($value) > 40) {
             // Replace all non-special chars
-            $converted =  preg_replace('/[\w\s\p{L},.:!]/', '', $value);
+            $converted = preg_replace('/[\w\s\p{L},.:!]/', '', $value) ?? $value;
 
             // Split string into an array, unify and sort
             $array = str_split($converted);
@@ -101,10 +101,10 @@ class Converter
 
             $converted = str_replace($_keys, $_values, $converted);
 
-            $converted = preg_replace('/[+-]\s*\d+/', '+', $converted);
-            $converted = preg_replace('/[()[\]{}]/', '(', $converted);
-            $converted = preg_replace('/[!?:=]/', ':', $converted);
-            $converted = preg_replace('/[^:(+]/', '', stripslashes($converted));
+            $converted = preg_replace('/[+-]\s*\d+/', '+', $converted) ?? $converted;
+            $converted = preg_replace('/[()[\]{}]/', '(', $converted) ?? $converted;
+            $converted = preg_replace('/[!?:=]/', ':', $converted) ?? $converted;
+            $converted = preg_replace('/[^:(+]/', '', stripslashes($converted)) ?? $converted;
 
             // Sort again and implode
             $array = str_split($converted);

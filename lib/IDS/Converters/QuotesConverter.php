@@ -13,7 +13,7 @@ class QuotesConverter implements ConverterInterface
         $value   = str_replace($pattern, '"', $value);
 
         //make sure harmless quoted strings don't generate false alerts
-        $value = preg_replace('/^"([^"=\\!><~]+)"$/', '$1', $value);
+        $value = preg_replace('/^"([^"=\\!><~]+)"$/', '$1', $value) ?? $value;
 
         return $value;
     }

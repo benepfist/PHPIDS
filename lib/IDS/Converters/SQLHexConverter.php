@@ -21,7 +21,7 @@ class SQLHexConverter implements ConverterInterface
             }
         }
         // take care of hex encoded ctrl chars
-        $value = preg_replace('/0x\d+/m', ' 1 ', $value);
+        $value = preg_replace('/0x\d+/m', ' 1 ', $value) ?? $value;
 
         return $value;
     }
