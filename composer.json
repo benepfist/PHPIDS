@@ -13,9 +13,13 @@
         "ezyang/htmlpurifier": "dev-master"
     },
     "autoload": {
-        "psr-0": {
-            "IDS\\Tests": "tests/",
-            "IDS": "lib/"
+        "psr-4": {
+            "IDS\\": "lib/IDS/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IDS\\Tests\\": "tests/IDS/Tests/"
         }
     },
     "require-dev": {
