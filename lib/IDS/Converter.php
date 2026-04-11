@@ -6,33 +6,34 @@ class Converter
 {
     public static ?ConverterPipeline $pipeline = null;
 
-    public static function runAll($value): string
+    public static function runAll(mixed $value): string
     {
         if (!self::$pipeline) {
             self::$pipeline = new ConverterPipeline();
-            $pipeline->add(new Converters\CommentedConverter());
-            $pipeline->add(new Converters\WhiteSpaceConverter());
-            $pipeline->add(new Converters\JsCharcodeConverter());
-            $pipeline->add(new Converters\JsRegexModifiersConverter());
-            $pipeline->add(new Converters\EntitiesConverter());
-            $pipeline->add(new Converters\QuotesConverter());
-            $pipeline->add(new Converters\SQLHexConverter());
-            $pipeline->add(new Converters\SQLKeywordsConverter());
-            $pipeline->add(new Converters\ControlCharsConverter());
-            $pipeline->add(new Converters\NestedBase64Converter());
-            $pipeline->add(new Converters\OutOfRangeCharsConverter());
-            $pipeline->add(new Converters\XMLConverter());
-            $pipeline->add(new Converters\JsUnicodeConverter());
-            $pipeline->add(new Converters\UTF7Converter());
-            $pipeline->add(new Converters\ConcatenatedConverter());
-            $pipeline->add(new Converters\ProprietaryEncodingsConverter());
-            $pipeline->add(new Converters\UrlencodeSqlCommentConverter());
+            self::$pipeline->add(new Converters\CommentedConverter());
+            self::$pipeline->add(new Converters\WhiteSpaceConverter());
+            self::$pipeline->add(new Converters\JsCharcodeConverter());
+            self::$pipeline->add(new Converters\JsRegexModifiersConverter());
+            self::$pipeline->add(new Converters\EntitiesConverter());
+            self::$pipeline->add(new Converters\QuotesConverter());
+            self::$pipeline->add(new Converters\SQLHexConverter());
+            self::$pipeline->add(new Converters\SQLKeywordsConverter());
+            self::$pipeline->add(new Converters\ControlCharsConverter());
+            self::$pipeline->add(new Converters\NestedBase64Converter());
+            self::$pipeline->add(new Converters\OutOfRangeCharsConverter());
+            self::$pipeline->add(new Converters\XMLConverter());
+            self::$pipeline->add(new Converters\JsUnicodeConverter());
+            self::$pipeline->add(new Converters\UTF7Converter());
+            self::$pipeline->add(new Converters\ConcatenatedConverter());
+            self::$pipeline->add(new Converters\ProprietaryEncodingsConverter());
+            self::$pipeline->add(new Converters\UrlencodeSqlCommentConverter());
         }
         return self::$pipeline->runAll($value);
     }
 
-    public static function runCentrifuge($value, ?Monitor $monitor = null): string
+    public static function runCentrifuge(mixed $value, ?Monitor $monitor = null): string
     {
+        $value = (string) $value;
 
         $threshold = 3.49;
         if (strlen($value) > 25) {

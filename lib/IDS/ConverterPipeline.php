@@ -4,6 +4,7 @@ namespace IDS;
 
 class ConverterPipeline
 {
+    /** @var list<ConverterInterface> */
     private array $converters = [];
 
     public function add(ConverterInterface $converter): self
@@ -12,8 +13,9 @@ class ConverterPipeline
         return $this;
     }
 
-    public function runAll(string $value): string
+    public function runAll(mixed $value): string
     {
+        $value = (string) $value;
         foreach ($this->converters as $converter) {
             $value = $converter->convert($value);
         }

@@ -11,8 +11,10 @@ use IDS\Filter\Provider\CachedFilterProvider;
 class Storage
 {
     protected string $source = '';
+    /** @var array<string, mixed>|null */
     protected ?array $cacheSettings = null;
     protected ?\IDS\Caching\CacheInterface $cache = null;
+    /** @var list<\IDS\Filter> */
     protected array $filterSet = [];
 
     /**

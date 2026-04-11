@@ -14,10 +14,18 @@ class UTF7ConverterTest extends TestCase
         $this->converter = new UTF7Converter();
     }
 
-    public function testConvertBasic(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('payloadProvider')]
+    public function testConvertBasic(string $input, string $expected): void
     {
-        $input = "dummy payload";
-        $expected = $this->converter->convert($input);
-        $this->assertIsString($expected);
+        $this->assertSame($expected, $this->converter->convert($input));
+    }
+
+    public static function payloadProvider(): array
+    {
+        return [
+            ['Normal payload', 'Normal payload'],
+            ['+ADw-script+AD4-', '+ADw-script+AD4-' . "\n" . '<script>'],
+            ['+ADw-img src=x onerror=alert(1)+AD4-', '+ADw-img src=x onerror=alert(1)+AD4-' . "\n" . '<img src=x onerror=alert(1)>']
+        ];
     }
 }
