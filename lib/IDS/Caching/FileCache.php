@@ -106,10 +106,7 @@ class FileCache implements CacheInterface
      */
     public static function getInstance($init)
     {
-        if (!self::$cachingInstance) {
-            self::$cachingInstance = new FileCache($init);
-        }
-
+        self::$cachingInstance = new FileCache($init);
         return self::$cachingInstance;
     }
 
@@ -186,6 +183,9 @@ class FileCache implements CacheInterface
     {
         /** @var int $ttl */
         $ttl = $this->config['expiration_time'];
+        if ($ttl <= 0) {
+            return file_exists($file);
+        }
         return file_exists($file) && time() - filectime($file) <= $ttl;
     }
 }

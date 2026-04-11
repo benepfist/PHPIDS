@@ -130,11 +130,7 @@ class DatabaseCache implements CacheInterface
      */
     public static function getInstance($type, $init)
     {
-
-        if (!self::$cachingInstance) {
-            self::$cachingInstance = new DatabaseCache($type, $init);
-        }
-
+        self::$cachingInstance = new DatabaseCache($type, $init);
         return self::$cachingInstance;
     }
 

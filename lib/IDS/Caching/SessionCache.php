@@ -89,11 +89,7 @@ class SessionCache implements CacheInterface
      */
     public static function getInstance($type, $init)
     {
-
-        if (!self::$cachingInstance) {
-            self::$cachingInstance = new SessionCache($type, $init);
-        }
-
+        self::$cachingInstance = new SessionCache($type, $init);
         return self::$cachingInstance;
     }
 

@@ -93,10 +93,7 @@ class ApcCache implements CacheInterface
      */
     public static function getInstance($init)
     {
-        if (!self::$cachingInstance) {
-            self::$cachingInstance = new ApcCache($init);
-        }
-
+        self::$cachingInstance = new ApcCache($init);
         return self::$cachingInstance;
     }
 

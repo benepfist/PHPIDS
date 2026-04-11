@@ -30,7 +30,8 @@ class FilterTest extends \PHPUnit\Framework\TestCase
     protected $init;
 
     protected function setUp(): void {
-        $this->init = Init::init(IDS_CONFIG);
+        $config = parse_ini_file(IDS_CONFIG, true);
+        $this->init = new Init($config === false ? [] : $config);
     }
 
     public function testObjectConstruction()

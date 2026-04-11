@@ -20,6 +20,7 @@ namespace IDS\Tests;
 
 use IDS\Init;
 use IDS\Monitor;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RuleTest extends \PHPUnit\Framework\TestCase
 {
@@ -28,7 +29,7 @@ class RuleTest extends \PHPUnit\Framework\TestCase
      */
     protected $init;
 
-    public function getPayloads()
+    public static function getPayloads()
     {
         return array(
             array(20, "if  ("),
@@ -48,14 +49,15 @@ class RuleTest extends \PHPUnit\Framework\TestCase
     }
 
     protected function setUp(): void {
-        $this->init = Init::init(IDS_CONFIG);
+        $config = parse_ini_file(IDS_CONFIG, true);
+        $this->init = new Init($config === false ? [] : $config);
         $this->init->config['General']['tmp_path'] = IDS_TEMP_DIR;
         $this->init->config['Caching']['path'] = IDS_FILTER_CACHE_FILE;
         $this->init->config['General']['filter_type'] = IDS_FILTER_TYPE;
         $this->init->config['General']['filter_path'] = IDS_FILTER_SET;
     }
 
-    /** @dataProvider getPayloads */
+    #[DataProvider('getPayloads')]
     public function testSingleRules($ruleId, $payload)
     {
         $monitor = new Monitor($this->init);

@@ -41,7 +41,8 @@ class FilterSetTest extends \PHPUnit\Framework\TestCase
 
     private function getFilterSet($type)
     {
-        $init = Init::init(IDS_CONFIG);
+        $config = parse_ini_file(IDS_CONFIG, true);
+        $init = new Init($config === false ? [] : $config);
         $init->config['General']['filter_type'] = strtolower($type);
         $init->config['General']['filter_path'] = constant('IDS_FILTER_SET_' . strtoupper($type));
         $init->config['Caching']['caching'] = 'none';

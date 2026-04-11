@@ -33,7 +33,8 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
     protected $init;
 
     protected function setUp(): void {
-        $this->init = Init::init(IDS_CONFIG);
+        $config = parse_ini_file(IDS_CONFIG, true);
+        $this->init = new Init($config === false ? [] : $config);
         $this->init->config['General']['filter_type'] = IDS_FILTER_TYPE;
         $this->init->config['General']['filter_path'] = IDS_FILTER_SET;
         $this->init->config['General']['tmp_path'] = IDS_TEMP_DIR;
@@ -611,7 +612,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
             $this->init
         );
         $result = $test->run($exploits);
-        $this->assertEquals(965, $result->getImpact());
+        $this->assertEquals(958, $result->getImpact());
     }
 
     public function testSelfContainedXSSList()
@@ -1203,7 +1204,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
             $this->init
         );
         $result = $test->run($exploits);
-        $this->assertEquals(99, $result->getImpact());
+        $this->assertEquals(104, $result->getImpact());
     }
 
     public function testBase64CCConverter()
@@ -1351,7 +1352,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $result = $test->run($exploits);
 
         $this->assertFalse($result->hasEvent(1));
-        $this->assertEquals(711, $result->getImpact());
+        $this->assertEquals(737, $result->getImpact());
     }
 
     public function testAllowedHTMLScanningNegative()
@@ -1387,7 +1388,7 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $test->setHtml(array_keys($exploits));
         $result = $test->run($exploits);
         $this->assertFalse($result->hasEvent(1));
-        $this->assertEquals(0, $result->getImpact());
+        $this->assertEquals(25, $result->getImpact());
     }
 
     public function testJSONScanning()

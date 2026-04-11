@@ -104,10 +104,7 @@ class MemcachedCache implements CacheInterface
      */
     public static function getInstance($init)
     {
-        if (!self::$cachingInstance) {
-            self::$cachingInstance = new MemcachedCache($init);
-        }
-
+        self::$cachingInstance = new MemcachedCache($init);
         return self::$cachingInstance;
     }
 

@@ -112,12 +112,12 @@ class Filter
      * Matches given string against the filter rule the specific object of this
      * class represents
      *
-     * @param string $input the string input to match
+     * @param mixed $input the string input to match
      *
      * @throws \InvalidArgumentException if argument is no string
      * @return boolean
      */
-    public function match(string $input): bool
+    public function match($input): bool
     {
         if (!is_string($input)) {
             throw new \InvalidArgumentException(

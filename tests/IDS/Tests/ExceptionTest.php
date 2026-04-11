@@ -52,7 +52,8 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
             )
         ));
 
-        $this->init = Init::init(IDS_CONFIG);
+        $config = parse_ini_file(IDS_CONFIG, true);
+        $this->init = new Init($config === false ? [] : $config);
     }
 
     public function testEventConstructorExceptions1()
