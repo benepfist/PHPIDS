@@ -1452,6 +1452,17 @@ class MonitorTest extends \PHPUnit\Framework\TestCase
         $this->assertGreaterThan(0, $result->getImpact());
     }
 
+    public function testDiffHandlesInvalidUtf8Gracefully()
+    {
+        $monitor = new Monitor($this->init);
+        $method = new \ReflectionMethod(Monitor::class, 'diff');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($monitor, "\xC3\x28<script>", 'safe', '');
+
+        $this->assertNull($result);
+    }
+
     public function testForFalseAlerts()
     {
         $exploits = array();
