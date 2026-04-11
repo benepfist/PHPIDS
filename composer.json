@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "IDS\\": "lib/IDS/"
+            "IDS\\": "src/IDS/"
         }
     },
     "autoload-dev": {
