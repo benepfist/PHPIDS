@@ -52,7 +52,7 @@ interface CacheInterface
      *
      * @param array<int|string, mixed> $data the cache data
      *
-     * @return void
+     * @return self
      */
     public function setCache(array $data): self;
 

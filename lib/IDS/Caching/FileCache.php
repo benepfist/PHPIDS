@@ -119,7 +119,7 @@ class FileCache implements CacheInterface
      * @param array<int|string, mixed> $data the cache data
      *
      * @throws \Exception if cache file couldn't be created
-     * @return object    $this
+     * @return self
      */
     public function setCache(array $data): self
     {

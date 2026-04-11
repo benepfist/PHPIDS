@@ -116,7 +116,7 @@ class MemcachedCache implements CacheInterface
      *
      * @param array<int|string, mixed> $data the caching data
      *
-     * @return object $this
+     * @return self
      */
     public function setCache(array $data): self
     {
