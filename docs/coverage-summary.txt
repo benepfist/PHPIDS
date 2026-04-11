@@ -1,12 +1,12 @@
 
 
-[1;37;40mCode Coverage Report:      [0m
-[1;37;40m  2026-04-11 19:30:44      [0m
-[1;37;40m                           [0m
-[1;37;40m Summary:                  [0m
-[30;42m  Classes: 97.06% (33/34)  [0m
-[30;42m  Methods: 99.07% (107/108)[0m
-[30;42m  Lines:   95.51% (894/936)[0m
+[1;37;40mCode Coverage Report:       [0m
+[1;37;40m  2026-04-11 19:33:49       [0m
+[1;37;40m                            [0m
+[1;37;40m Summary:                   [0m
+[30;42m  Classes: 100.00% (34/34)  [0m
+[30;42m  Methods: 100.00% (110/110)[0m
+[30;42m  Lines:   95.63% (897/938) [0m
 
 IDS\Caching\ApcCache
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
@@ -67,7 +67,7 @@ IDS\Filter\Provider\CachedFilterProvider
 IDS\Filter\Provider\JsonFilterProvider
   [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 22/ 22)[0m
 IDS\Filter\Provider\XmlFilterProvider
-  [37;41mMethods:  50.00% ( 1/ 2)[0m   [30;42mLines:  95.83% ( 23/ 24)[0m
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 26/ 26)[0m
 IDS\Filter\Storage
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 25/ 25)[0m
 IDS\Init

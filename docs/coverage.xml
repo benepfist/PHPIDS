@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1775935844">
-  <project timestamp="1775935844" name="Clover Coverage">
+<coverage generated="1775936028">
+  <project timestamp="1775936028" name="Clover Coverage">
     <package name="IDS\Caching">
       <file name="C:\Data\GitHub\PHPIDS\lib\IDS\Caching\ApcCache.php">
         <class name="IDS\Caching\ApcCache" namespace="IDS\Caching">
@@ -430,12 +430,12 @@
         <class name="IDS\Filter" namespace="IDS">
           <metrics complexity="8" methods="7" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="22" coveredelements="22"/>
         </class>
-        <line num="100" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="96"/>
-        <line num="102" type="stmt" count="96"/>
-        <line num="103" type="stmt" count="96"/>
-        <line num="104" type="stmt" count="96"/>
-        <line num="105" type="stmt" count="96"/>
-        <line num="106" type="stmt" count="96"/>
+        <line num="100" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="97"/>
+        <line num="102" type="stmt" count="97"/>
+        <line num="103" type="stmt" count="97"/>
+        <line num="104" type="stmt" count="97"/>
+        <line num="105" type="stmt" count="97"/>
+        <line num="106" type="stmt" count="97"/>
         <line num="120" type="method" name="match" visibility="public" complexity="2" crap="2" count="52"/>
         <line num="122" type="stmt" count="52"/>
         <line num="123" type="stmt" count="1"/>
@@ -1206,35 +1206,39 @@
       </file>
       <file name="C:\Data\GitHub\PHPIDS\lib\IDS\Filter\Provider\XmlFilterProvider.php">
         <class name="IDS\Filter\Provider\XmlFilterProvider" namespace="IDS\Filter\Provider">
-          <metrics complexity="7" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="23" elements="26" coveredelements="24"/>
+          <metrics complexity="9" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="26" elements="30" coveredelements="30"/>
         </class>
-        <line num="9" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="67"/>
-        <line num="11" type="stmt" count="67"/>
-        <line num="14" type="method" name="getFilters" visibility="public" complexity="6" crap="6" count="9"/>
-        <line num="16" type="stmt" count="9"/>
+        <line num="9" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="68"/>
+        <line num="11" type="stmt" count="68"/>
+        <line num="14" type="method" name="getFilters" visibility="public" complexity="5" crap="5" count="10"/>
+        <line num="16" type="stmt" count="10"/>
         <line num="17" type="stmt" count="1"/>
-        <line num="20" type="stmt" count="8"/>
+        <line num="20" type="stmt" count="9"/>
         <line num="21" type="stmt" count="2"/>
-        <line num="24" type="stmt" count="6"/>
-        <line num="26" type="stmt" count="6"/>
-        <line num="27" type="stmt" count="6"/>
-        <line num="29" type="stmt" count="0"/>
-        <line num="32" type="stmt" count="6"/>
-        <line num="33" type="stmt" count="6"/>
+        <line num="24" type="stmt" count="7"/>
+        <line num="26" type="stmt" count="7"/>
+        <line num="28" type="stmt" count="7"/>
+        <line num="29" type="stmt" count="7"/>
+        <line num="32" type="stmt" count="7"/>
+        <line num="33" type="stmt" count="1"/>
         <line num="36" type="stmt" count="6"/>
-        <line num="37" type="stmt" count="1"/>
-        <line num="40" type="stmt" count="5"/>
-        <line num="41" type="stmt" count="5"/>
-        <line num="42" type="stmt" count="5"/>
-        <line num="43" type="stmt" count="5"/>
-        <line num="44" type="stmt" count="5"/>
-        <line num="45" type="stmt" count="5"/>
-        <line num="46" type="stmt" count="5"/>
-        <line num="47" type="stmt" count="5"/>
-        <line num="48" type="stmt" count="5"/>
-        <line num="49" type="stmt" count="5"/>
-        <line num="52" type="stmt" count="5"/>
-        <metrics loc="55" ncloc="55" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="23" elements="26" coveredelements="24"/>
+        <line num="37" type="stmt" count="6"/>
+        <line num="38" type="stmt" count="6"/>
+        <line num="39" type="stmt" count="6"/>
+        <line num="40" type="stmt" count="6"/>
+        <line num="41" type="stmt" count="6"/>
+        <line num="42" type="stmt" count="6"/>
+        <line num="43" type="stmt" count="6"/>
+        <line num="44" type="stmt" count="6"/>
+        <line num="45" type="stmt" count="6"/>
+        <line num="48" type="stmt" count="6"/>
+        <line num="51" type="method" name="loadXmlFile" visibility="protected" complexity="2" crap="2" count="7"/>
+        <line num="53" type="stmt" count="7"/>
+        <line num="54" type="stmt" count="6"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="60" type="method" name="getLibxmlVersion" visibility="protected" complexity="1" crap="1" count="6"/>
+        <line num="62" type="stmt" count="6"/>
+        <metrics loc="65" ncloc="65" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="26" elements="30" coveredelements="30"/>
       </file>
     </package>
     <file name="C:\Data\GitHub\PHPIDS\lib\IDS\Filter\Provider\FilterProviderInterface.php">
@@ -1277,6 +1281,6 @@
         <metrics loc="102" ncloc="71" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="25" elements="29" coveredelements="29"/>
       </file>
     </package>
-    <metrics files="39" loc="3745" ncloc="2163" classes="34" methods="108" coveredmethods="107" conditionals="0" coveredconditionals="0" statements="936" coveredstatements="894" elements="1044" coveredelements="1001"/>
+    <metrics files="39" loc="3755" ncloc="2173" classes="34" methods="110" coveredmethods="110" conditionals="0" coveredconditionals="0" statements="938" coveredstatements="897" elements="1048" coveredelements="1007"/>
   </project>
 </coverage>

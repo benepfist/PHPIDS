@@ -23,11 +23,7 @@ class XmlFilterProvider implements FilterProviderInterface
 
         $previous = libxml_use_internal_errors(true);
         try {
-            if (LIBXML_VERSION >= 20621) {
-                $filters = simplexml_load_file($this->source, null, LIBXML_COMPACT);
-            } else {
-                $filters = simplexml_load_file($this->source);
-            }
+            $filters = $this->loadXmlFile();
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($previous);
@@ -50,5 +46,19 @@ class XmlFilterProvider implements FilterProviderInterface
         }
 
         return $filterSet;
+    }
+
+    protected function loadXmlFile(): \SimpleXMLElement|false
+    {
+        if ($this->getLibxmlVersion() >= 20621) {
+            return simplexml_load_file($this->source, null, LIBXML_COMPACT);
+        }
+
+        return simplexml_load_file($this->source);
+    }
+
+    protected function getLibxmlVersion(): int
+    {
+        return LIBXML_VERSION;
     }
 }

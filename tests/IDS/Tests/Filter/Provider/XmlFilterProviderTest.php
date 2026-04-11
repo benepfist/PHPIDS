@@ -7,6 +7,14 @@ use IDS\Filter\Provider\XmlFilterProvider;
 use IDS\Tests\Support\RuntimeFunctionOverrides;
 use PHPUnit\Framework\TestCase;
 
+class LegacyLibxmlXmlFilterProvider extends XmlFilterProvider
+{
+    protected function getLibxmlVersion(): int
+    {
+        return 20620;
+    }
+}
+
 class XmlFilterProviderTest extends TestCase
 {
     private array $tempFiles = [];
@@ -53,6 +61,16 @@ class XmlFilterProviderTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
         $provider->getFilters();
+    }
+
+    public function testGetFiltersLoadsDefaultFilterSetWithLegacyLibxmlBranch(): void
+    {
+        $provider = new LegacyLibxmlXmlFilterProvider(IDS_FILTER_SET_XML);
+
+        $filters = $provider->getFilters();
+
+        $this->assertNotEmpty($filters);
+        $this->assertContainsOnlyInstancesOf(Filter::class, $filters);
     }
 
     private function createTempFile(string $contents): string
