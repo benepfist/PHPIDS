@@ -39,7 +39,7 @@ jobs:
           ${{ runner.os }}-composer-
 
     - name: Install dependencies
-      run: composer update --no-interaction --no-progress --prefer-dist --optimize-autoloader
+      run: composer update --no-interaction --no-progress --prefer-dist --optimize-autoloader --ignore-platform-req=php+
 
     - name: Run PHPUnit
       run: vendor/bin/phpunit --display-deprecations --display-phpunit-deprecations --display-notices --display-warnings
