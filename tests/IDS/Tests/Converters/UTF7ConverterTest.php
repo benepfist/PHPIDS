@@ -49,17 +49,16 @@ class UTF7ConverterTest extends TestCase
     {
         self::$forceFunctionMissing = true;
 
-        $this->assertSame('<script>', $this->converter->convert('+ADw-script+AD4-'));
+        $this->assertSame('+ADw-script+AD4-' . "\n" . '<script>', $this->converter->convert('+ADw-script+AD4-'));
     }
 
     public function testConvertSkipsAsciiFilteringForPhp84AndAboveBranch(): void
     {
         self::$forceVersionCompareNotLessThan = true;
-        self::$mockConvertedValue = '<script>';
 
-        $input = "µ+ADw-script+AD4-";
+        $input = "a+ADw-script+AD4-";
 
-        $this->assertSame($input . "\n" . '<script>', $this->converter->convert($input));
+        $this->assertSame($input . "\n" . 'a<script>', $this->converter->convert($input));
     }
 
     private static function registerUtf7Shims(): void

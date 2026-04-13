@@ -22,12 +22,28 @@ class JsCharcodeConverter implements ConverterInterface
                 $char = preg_replace('/\W0/s', '', $char) ?? $char;
 
                 if (preg_match_all('/\d*[+-\/\* ]\d+/', $char, $matches)) {
-                    $match = preg_split('/(\W?\d+)/', implode('', $matches[0]), -1, PREG_SPLIT_DELIM_CAPTURE);
-                    $match = $match === false ? [] : $match;
+                    $expr = implode('', $matches[0]);
+                    $tokens = preg_split('/([+\-\/*])/', $expr, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+                    $tokens = $tokens === false ? [] : $tokens;
 
-                    $sum = array_sum($match);
-                    if ($sum >= 20 && $sum <= 127) {
-                        $converted .= chr((int) $sum);
+                    $result = 0.0;
+                    if (count($tokens) > 0) {
+                        $result = (float) array_shift($tokens);
+                        while (count($tokens) >= 2) {
+                            $op = array_shift($tokens);
+                            $val = (float) array_shift($tokens);
+
+                            switch ($op) {
+                                case '+': $result += $val; break;
+                                case '-': $result -= $val; break;
+                                case '*': $result *= $val; break;
+                                case '/': $result = $val != 0 ? $result / $val : 0; break;
+                            }
+                        }
+                    }
+
+                    if ($result >= 20 && $result <= 127) {
+                        $converted .= chr((int) $result);
                     }
 
                 } elseif (!empty($char) && $char >= 20 && $char <= 127) {
